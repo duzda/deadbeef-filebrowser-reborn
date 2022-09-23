@@ -21,9 +21,9 @@ DB_plugin_t* ddb_misc_filebrowser_reborn_load(DB_functions_t* api) {
     plugin.plugin.version_minor = 1;
     plugin.plugin.id = "filebrowser-reborn";
     plugin.plugin.name = "File Browser Reborn";
-    plugin.plugin.descr = "Based on http://sourceforge.net/projects/deadbeef-fb";
-    plugin.plugin.copyright = "GPL";
-    plugin.plugin.website = "none";
+    plugin.plugin.descr = "Simple file browser, based on http://sourceforge.net/projects/deadbeef-fb";
+    plugin.plugin.copyright = "GPL-3.0";
+    plugin.plugin.website = "https://www.github.com/duzda/deadbeef-filebrowser-reborn";
     plugin.plugin.connect = &Controller::pluginConnect;
     plugin.plugin.disconnect = &Controller::pluginDisconnect;
     plugin.plugin.configdialog = config_dialog;
