@@ -22,7 +22,7 @@ Feel free to [download the plugin](https://github.com/duzda/deadbeef-filebrowser
 ``` ~/.local/lib/deadbeef/ ```
 then you should be able to create a new widget called 'File Browser' via design menu. If you would instead prefer to compile the plugin youself, download the source code and run
 
-``` meson build && cd build && ninja && ../quick-install.sh ```
+``` meson build --buildtype release && cd build && ninja && ../quick-install.sh ```
 
 To uninstall the plugin, you can remove the .so file from ``` ~/.local/lib/deadbeef/ ``` or run ``` quick-remove.sh ```.
 
