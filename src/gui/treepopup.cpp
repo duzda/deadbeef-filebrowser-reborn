@@ -98,6 +98,10 @@ void TreePopup::addToPlaylist(std::vector<std::string> uris, std::string address
         deadbeef->plt_save_config(plt);
         deadbeef->conf_save();
     }
+
+    if (replace) {
+        deadbeef->sendmessage(DB_EV_PLAY_NUM, 0, 0, 0);
+    }
 }
 
 void TreePopup::popup_open_folder() {
