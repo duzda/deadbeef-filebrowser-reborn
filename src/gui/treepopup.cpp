@@ -42,7 +42,6 @@ void TreePopup::initialize(Gtk::TreeView* treeview, TreeFilebrowser* treefb, Fil
 bool TreePopup::on_click(GdkEventButton* event) {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         this->popup_at_pointer(NULL);
-        return this->hasSelected();
     } else if (event->type == GDK_2BUTTON_PRESS && event->button == 1) {
         if (deadbeef->conf_get_int(FBR_DOUBLECLICK_REPLACE, 0)) {
             popup_replace();
