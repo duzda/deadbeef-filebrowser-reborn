@@ -100,6 +100,10 @@ void TreePopup::addToPlaylist(std::vector<std::string> uris, std::string address
 
     if (replace) {
         deadbeef->sendmessage(DB_EV_PLAY_NUM, 0, 0, 0);
+    } else {
+        if (deadbeef->playback_get_pos() == 0.0) {
+            deadbeef->sendmessage(DB_EV_NEXT, 0, 0, 0);
+        }
     }
 }
 
