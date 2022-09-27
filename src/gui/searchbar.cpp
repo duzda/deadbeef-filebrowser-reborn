@@ -4,7 +4,7 @@
 
 Searchbar::Searchbar() {
     auto primaryIcon = this->property_primary_icon_pixbuf();
-    primaryIcon = Utils::getIconByName("gtk-find", 16);
+    primaryIcon = Utils::getIconByName("system-search", 16);
 }
 
 void Searchbar::setTreeModelFilter(FilebrowserFilter* filter) {
