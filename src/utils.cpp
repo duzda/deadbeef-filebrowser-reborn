@@ -40,8 +40,15 @@ std::string Utils::escapeTooltip(std::string tooltip) {
 }
 
 Glib::RefPtr<Gdk::Pixbuf> Utils::getIconByName(const char* name, uint size) {
-    auto theme = Gtk::IconTheme::get_default();
-    return theme->load_icon(name, size);
+    Glib::RefPtr<Gtk::IconTheme> theme = Gtk::IconTheme::get_default();
+    Gtk::IconInfo icon = theme->lookup_icon(name, size);
+    if (icon) {
+        return icon.load_icon();
+    } else {
+        Glib::RefPtr<Gdk::Pixbuf> invalidIcon = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, true, 8, size, size);
+        invalidIcon->fill(0xFF00FFFF);
+        return invalidIcon;
+    }
 }
 
 std::vector<std::string> Utils::createValidExtensions() {
