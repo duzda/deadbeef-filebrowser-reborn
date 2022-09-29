@@ -85,10 +85,7 @@ private:
     void fillChildrenRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent);
 
     /**
-     * To be used via g_idle_add(), fills information row to treeview on main thread.
-     * 
-     * @param data pass this.
-     * @return 0, to remove from idle queue.
+     * Fills information row to treeview.
      */
-    static int fillEmptyRow(void* data);
+    void fillEmptyRow();
 };

@@ -71,7 +71,7 @@ void TreeFilebrowser::refreshThread() {
             progressIteration++;
         }
     } else {
-        TreeFilebrowser::fillEmptyRow(this);
+        this->fillEmptyRow();
     }
     pluginLog(DDB_LOG_LAYER_INFO, "Structure loaded");
     this->mRefreshLock = false;
@@ -86,12 +86,6 @@ void TreeFilebrowser::stopThread() {
         this->mRefreshThread->join();
         this->mRefreshThread = NULL;
         this->mRefreshThreadRunning = true;
-    }
-}
-
-void TreeFilebrowser::checkEmptyRoot() {
-    if (this->children().empty()) {
-        g_idle_add((GSourceFunc)&TreeFilebrowser::fillEmptyRow, this);
     }
 }
 
@@ -129,21 +123,19 @@ void TreeFilebrowser::fillChildrenRow(std::filesystem::directory_entry entry, co
     }
 }
 
-int TreeFilebrowser::fillEmptyRow(void* data) {
-    auto self = static_cast<TreeFilebrowser*>(data);
-    auto row = *(self->append());
+void TreeFilebrowser::fillEmptyRow() {
+    auto row = *(this->append());
     Glib::RefPtr<Gdk::Pixbuf> emptyIcon;
-    row[self->mModelColumns.mColumnIcon] = emptyIcon;
-    row[self->mModelColumns.mColumnURI] = "";
-    row[self->mModelColumns.mColumnVisibility] = true;
-    if (self->mIsNeedleSet) {
-        row[self->mModelColumns.mColumnName] = "(EMPTY)";
-        row[self->mModelColumns.mColumnTooltip] = "This directory is empty.";
+    row[this->mModelColumns.mColumnIcon] = emptyIcon;
+    row[this->mModelColumns.mColumnURI] = "";
+    row[this->mModelColumns.mColumnVisibility] = true;
+    if (this->mIsNeedleSet) {
+        row[this->mModelColumns.mColumnName] = "(EMPTY)";
+        row[this->mModelColumns.mColumnTooltip] = "This directory is empty.";
     } else {
-        row[self->mModelColumns.mColumnName] = "(NO RESULTS)";
-        row[self->mModelColumns.mColumnTooltip] = "Try searching for something else.";
+        row[this->mModelColumns.mColumnName] = "(NO RESULTS)";
+        row[this->mModelColumns.mColumnTooltip] = "Try searching for something else.";
     }
-    return 0;
 }
 
 TreeFilebrowser::~TreeFilebrowser() {
