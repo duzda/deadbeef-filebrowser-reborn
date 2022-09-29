@@ -42,7 +42,8 @@ void Container::initialize() {
 
 void Container::buildTreeview() {
     this->mTreeView.set_model(mFilebrowserFilter);
-    this->mTreeFilebrowser->setTreeView(&this->mTreeView);
+    this->mAddressbox.initialize(&mTreeView, mFilebrowserFilter);
+    this->mTreeFilebrowser->initialize(&this->mTreeView, &this->mAddressbox);
 
     this->mTreeView.append_column("Icon", this->mTreeFilebrowser->mModelColumns.mColumnIcon);
     this->mTreeView.append_column("Name", this->mTreeFilebrowser->mModelColumns.mColumnName);

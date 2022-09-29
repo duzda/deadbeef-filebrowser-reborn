@@ -7,7 +7,9 @@ static DB_misc_t plugin;
 
 const char config_dialog[] =
 "property \"Icon size: \" spinbtn[24,48,2] " FBR_ICON_SIZE " \"32\" ;\n"
-"property \"Doubleclick replace: \" checkbox " FBR_DOUBLECLICK_REPLACE " \"0\" ;\n"
+"property \"Doubleclick replace playlist content \" checkbox " FBR_DOUBLECLICK_REPLACE " \"0\" ;\n"
+"property \"Load song cover art from metadata (this will take a long time for the first time) \" checkbox " FBR_LOADCOVER_SONG " \"0\" ;\n"
+"property \"Load folder cover art from metadata (this will take a long time for the first time) \" checkbox " FBR_LOADCOVER_ALBUM " \"0\" ;\n"
 ;
 
 extern "C" 
@@ -29,4 +31,8 @@ DB_plugin_t* ddb_misc_filebrowser_reborn_load(DB_functions_t* api) {
     plugin.plugin.configdialog = config_dialog;
 
     return DB_PLUGIN(&plugin.plugin);
+}
+
+void pluginLog(int level, std::string message) {
+    deadbeef->log_detailed (&plugin.plugin, level, message.c_str());
 }
