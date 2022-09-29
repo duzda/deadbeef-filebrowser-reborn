@@ -20,7 +20,7 @@ mGoButton() {
     mDispatcher.connect(sigc::mem_fun(*this, &Addressbox::onNotify));
 }
 
-void Addressbox::initialize(Gtk::TreeView *treeview, Glib::RefPtr<FilebrowserFilter> filter, TreeFilebrowser* treefb) {
+void Addressbox::initialize(Gtk::TreeView* treeview, Glib::RefPtr<FilebrowserFilter> filter, TreeFilebrowser* treefb) {
     this->mTreeView = treeview;
     this->mFilebrowserFilter = filter;
     this->mTreeFilebrowser = treefb;
