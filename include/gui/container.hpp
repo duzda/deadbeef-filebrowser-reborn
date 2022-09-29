@@ -12,7 +12,6 @@ class Container : public Gtk::VBox {
 public:
     Container();
     ~Container();
-    void initialize();
 private:
     Searchbar mSearchbar;
     Addressbox mAddressbox;
@@ -22,5 +21,6 @@ private:
     Glib::RefPtr<TreeFilebrowser> mTreeFilebrowser;
     Glib::RefPtr<FilebrowserFilter> mFilebrowserFilter;
 
+    void initialize();
     void buildTreeview();
 };
