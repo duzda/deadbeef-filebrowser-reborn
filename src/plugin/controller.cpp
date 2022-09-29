@@ -2,8 +2,6 @@
 #include "plugin.hpp"
 #include "settings.hpp"
 
-#include <iostream>
-
 ddb_gtkui_t* Controller::gtkui_plugin = nullptr;
 Container* Controller::container = nullptr;
 

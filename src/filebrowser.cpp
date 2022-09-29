@@ -5,8 +5,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include <iostream>
-
 std::vector<std::string> Filebrowser::VALID_EXTENSIONS = std::vector<std::string>();
 
 std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(std::filesystem::path path, bool sort, bool showHiddenFiles) {

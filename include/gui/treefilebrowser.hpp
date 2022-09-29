@@ -6,7 +6,6 @@
 #include <atomic>
 #include <memory>
 
-
 #include "modelcolumns.hpp"
 
 class Addressbox;
