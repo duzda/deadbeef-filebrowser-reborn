@@ -16,6 +16,14 @@ mGoButton() {
     this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName("go-next", 16))));
     this->pack_start(this->mAddressBar, true, true);
     this->pack_start(this->mGoButton, false, true);
+
+    // Connect the handler to the dispatcher.
+    mDispatcher.connect(sigc::mem_fun(*this, &Addressbox::onNotify));
+}
+
+void Addressbox::initialize(Gtk::TreeView *treeview, Glib::RefPtr<FilebrowserFilter> filter) {
+    this->mTreeView = treeview;
+    this->mFilebrowserFilter = filter;
 }
 
 void Addressbox::setTreeFilebrowser(TreeFilebrowser* newTreeFilebrowser) {
@@ -27,11 +35,53 @@ void Addressbox::setAddress(std::string newAddress) {
     this->on_go_button_click();
 }
 
+void Addressbox::updateProgress() {
+    float progress;
+    mTreeFilebrowser->getProgress(&progress);
+    if (progress == 1) {
+        pluginLog(DDB_LOG_LAYER_INFO, "Thread reported progress done");
+        inProgress = false;
+        if (inProgress == false) {
+            pluginLog(DDB_LOG_LAYER_INFO, "Thread just finished, changing UI");
+            this->mAddressBar.set_sensitive(true);
+            this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName("go-next", 16))));
+            this->mAddressBar.set_progress_fraction(0);
+            this->mTreeView->set_model(this->mFilebrowserFilter);
+        }
+    } else {
+        if (inProgress == false) {
+            pluginLog(DDB_LOG_LAYER_INFO, "Thread just started running, changing buttons");
+            //this->mTreeView->unset_model();
+            this->mAddressBar.set_sensitive(false);
+            this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName("process-stop", 16))));
+            inProgress = true;
+        }
+        this->mAddressBar.set_progress_fraction(progress);
+    }
+}
+
+void Addressbox::setProgressBar(ProgressBarData* data) {
+    data->bar->set_progress_fraction(data->progress);
+}
+
+void Addressbox::notify() {
+    mDispatcher.emit();
+}
+
+void Addressbox::onNotify() {
+    this->updateProgress();
+}
+
 std::string Addressbox::getAddress() {
     return this->mAddress;
 }
 
 void Addressbox::on_go_button_click() {
+    if (inProgress) {
+        pluginLog(DDB_LOG_LAYER_INFO, "Still in progress");
+        this->mTreeFilebrowser->stopThread();
+        return;
+    }
     this->mAddress = this->mAddressBar.get_text();
     this->mAddress = this->makeValidPath(this->mAddress);
     deadbeef->conf_set_str(FBR_DEFAULT_PATH, this->mAddress.c_str());

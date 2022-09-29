@@ -54,6 +54,8 @@ public:
      * @return Vector of all supported extensions
      */
     static std::vector<std::string> createValidExtensions();
+
+    static Glib::RefPtr<Gdk::Pixbuf> getCoverPicture(std::string filename, int size);
 private:
     Utils();
     ~Utils();
