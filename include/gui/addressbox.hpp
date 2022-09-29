@@ -8,22 +8,13 @@
 class Addressbox : public Gtk::HBox
 {
 public:
-    void setTreeFilebrowser(TreeFilebrowser* newTreeFilebrowser);
+    void initialize(Gtk::TreeView* treeview, Glib::RefPtr<FilebrowserFilter> filter, TreeFilebrowser* treefb);
     void setAddress(std::string newAddres);
-    void updateProgress(float progress);
-    void initialize(Gtk::TreeView* treeview, Glib::RefPtr<FilebrowserFilter>);
     std::string getAddress();
 
     /**
-     * Makes path valid (removes trailing /)
-     * 
-     * @param path String we need to correct.
-     * 
-     * @return New corrected string.
+     * Notifies dispatcher.
      */
-    std::string makeValidPath(std::string path);
-
-    // Called from the worker thread.
     void notify();
 
     Addressbox();
@@ -36,20 +27,31 @@ private:
     Glib::RefPtr<FilebrowserFilter> mFilebrowserFilter;
     std::string mAddress;
 
-    bool inProgress = false;
-
+    bool mInProgress = false;
     Glib::Dispatcher mDispatcher;
-    void onNotify();
-    void updateProgress();
 
     /**
-     * Gets called when pressing Go! button
+     * Dispatcher event.
+     */
+    void onNotify();
+
+    /**
+     * Changes button according to progress, updates progress bar, 
+     * this is just a wild guess, and progress gets counted only by the root folders.
+     */
+    void updateProgressState();
+
+    /**
+     * Gets called when pressing the search button
      */
     void on_go_button_click();
 
-    struct ProgressBarData {
-        Gtk::Entry* bar;
-        float progress;
-    };
-    static void setProgressBar(ProgressBarData* data);
+    /**
+     * Makes path valid (removes trailing /)
+     * 
+     * @param path String we need to correct.
+     * 
+     * @return New corrected string.
+     */
+    std::string makeValidPath(std::string path);
 };

@@ -18,10 +18,13 @@ public:
     void setNeedleState(bool newState);
     void initialize(Gtk::TreeView* treeview, Addressbox* addressbox);
     void setIconSize(uint newValue);
-    void refreshThread();
-    void stopThread();
 
-    void getProgress(float* progress) const;
+    /**
+     * Returns approximate progress of reading directory tree.
+     * 
+     * @return Float between 0 and 1, 1 when finished
+     */
+    float getProgress();
 
     /**
      * Sets new root directory and refreshes tree.
@@ -36,44 +39,30 @@ public:
      */
     void refreshTree();
 
+    void refreshThread();
+
+    /**
+     * Stops the thread that updates the tree directory.
+     */
+    void stopThread();
 
 private:
+    TreeFilebrowser();
+    ~TreeFilebrowser();
+
     std::filesystem::path mTreeDirectory;
     Gtk::TreeView* mTreeView;
     Addressbox* mAddressbox;
 
     uint mIconSize = 32;
 
-    bool mIsNeedleSet = true;
-    bool refreshLock = false;
+    bool mIsNeedleSet = false;
 
-    TreeFilebrowser();
-    ~TreeFilebrowser();
-
-    float progressCount = 0;
-    float progressIteration = 1;
-    std::atomic<float> threadProgress = 0;
-    
-
-    /**
-     * Function to refresh tree via second thread.
-     * 
-     * @param data pass this.
-     */
-    static void threadedRefreshTree(void* data);
+    bool mRefreshLock = false;
 
     std::thread* mRefreshThread;
-    std::atomic<bool> mRefreshThreadRun = true;
-
-    /**
-     * Recursively creates TreeModel at path.
-     * 
-     * @param path Creates TreeModel at path.
-     * @param parent Parent of newly created entries(used in recursion).
-     */
-    void initialize(std::filesystem::path path, Gtk::TreeRow* parent = nullptr);
-
-    void findChildren(std::filesystem::path path, Gtk::TreeNodeChildren child);
+    std::atomic<float> mThreadProgress = 0;
+    std::atomic<bool> mRefreshThreadRunning = true;
 
     /**
      * If tree would be empty, this adds line indicating that the directory is empty or hidden.
@@ -81,29 +70,20 @@ private:
     void checkEmptyRoot();
 
     /**
-     * Probably wanna use new(), to not loose memory when sending to main thread.
+     * Fills row of treeview.
      * 
-     * @param self pass this.
-     * @param row Make sure to initialize via new().
-     * @param icon Icon.
-     * @param entry File/directory path.
-     * @param parent pass NULL, or parent row.
+     * @param entry Path to the new child.
+     * @param child Parent to of the current entry, can be null.
      */
-    struct structRowData {
-        TreeFilebrowser* self;
-        Gtk::TreeRow* row;
-        Glib::RefPtr<Gdk::Pixbuf> icon;
-        std::filesystem::directory_entry entry;
-        Gtk::TreeRow* parent;
-    };
+    void fillRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent = nullptr);
 
     /**
-     * To be used via g_idle_add(), fills row of treeview on main thread.
+     * Fills row of treeview, but is allowed to be exited prematurely. (This should be used when adding children of a node)
      * 
-     * @param data structRowData.
-     * @return 0, to remove from idle queue.
+     * @param entry Path to the new child.
+     * @param child Parent to of the current entry.
      */
-    static int fillRow(void* data);
+    void fillChildrenRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent);
 
     /**
      * To be used via g_idle_add(), fills information row to treeview on main thread.

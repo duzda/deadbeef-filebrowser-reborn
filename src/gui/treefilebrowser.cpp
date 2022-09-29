@@ -9,8 +9,6 @@
 
 TreeFilebrowser::TreeFilebrowser() {
     this->set_column_types(mModelColumns);
-    //this->treeStore = Gtk::TreeStore::create(mModelColumns);
-    //mTreeView->set_model(this->treeStore);
 }
 
 Glib::RefPtr<TreeFilebrowser> TreeFilebrowser::create() {
@@ -21,7 +19,7 @@ void TreeFilebrowser::setNeedleState(bool newState) {
     this->mIsNeedleSet = newState;
 }
 
-void TreeFilebrowser::initialize(Gtk::TreeView *treeview, Addressbox *addressbox) {
+void TreeFilebrowser::initialize(Gtk::TreeView* treeview, Addressbox* addressbox) {
     this->mTreeView = treeview;
     this->mAddressbox = addressbox;
 }
@@ -30,8 +28,12 @@ void TreeFilebrowser::setIconSize(uint newIconSize) {
     this->mIconSize = newIconSize;
 }
 
+float TreeFilebrowser::getProgress() {
+    return (this->mRefreshLock ? (float)this->mThreadProgress : 1);
+}
+
 void TreeFilebrowser::setTreeRoot(std::filesystem::path newDirectory) {
-    if (refreshLock) {
+    if (this->mRefreshLock) {
         return;
     }
     this->mTreeDirectory = newDirectory;
@@ -39,105 +41,91 @@ void TreeFilebrowser::setTreeRoot(std::filesystem::path newDirectory) {
 }
 
 void TreeFilebrowser::refreshTree() {
-    if (refreshLock) {
+    if (this->mRefreshLock) {
         return;
     }
-    refreshLock = true;
-    mRefreshThread = new std::thread(&TreeFilebrowser::refreshThread, this);
+    this->mRefreshLock = true;
+    this->mRefreshThread = new std::thread(&TreeFilebrowser::refreshThread, this);
 }
 
 void TreeFilebrowser::refreshThread() {
-    mTreeView->unset_model();
-    clear();
+    this->mTreeView->unset_model();
+    this->clear();
     pluginLog(DDB_LOG_LAYER_INFO, "Loading tree structure");
     auto filelist = Filebrowser::getFileList(mTreeDirectory, true, false);
-    std::size_t count = filelist.size();
-    progressCount = count;
-    threadProgress = 0;
-    progressIteration = 0;
-    if (count > 0) {
+    float progressTotal = filelist.size();
+    float progressIteration = 0;
+    this->mThreadProgress = 0;
+    if (progressTotal > 0) {
         for (auto &entry : filelist) {
-            if (!mRefreshThreadRun.load()) {
+            if (!this->mRefreshThreadRunning.load()) {
                 pluginLog(DDB_LOG_LAYER_INFO, "Load canceled by user");
-                threadProgress = 1;
-                mAddressbox->notify();
-                refreshLock = false;
+                this->mThreadProgress = 1;
+                this->mAddressbox->notify();
+                this->mRefreshLock = false;
                 return;
             }
-            threadProgress = progressIteration / progressCount;
-            mAddressbox->notify();
-            Glib::RefPtr<Gdk::Pixbuf> icon = Utils::getIcon(entry, mIconSize);
-            Gtk::TreeModel::iterator iter = append();
-            Gtk::TreeRow row = *iter;
-            row[mModelColumns.mColumnIcon] = icon;
-            row[mModelColumns.mColumnName] = entry.path().filename();
-            row[mModelColumns.mColumnURI] = entry.path().string().erase(0, mTreeDirectory.string().size());
-            row[mModelColumns.mColumnTooltip] = Utils::escapeTooltip(entry.path());
-            row[mModelColumns.mColumnVisibility] = true;
-
-            if (entry.is_directory() && !std::filesystem::is_empty(entry)) {
-                this->findChildren(entry.path(), row.children());
-            }
+            this->mThreadProgress = progressIteration / progressTotal;
+            this->mAddressbox->notify();
+            this->fillRow(entry);
             progressIteration++;
         }
     } else {
         TreeFilebrowser::fillEmptyRow(this);
     }
     pluginLog(DDB_LOG_LAYER_INFO, "Structure loaded");
-    //mTreeView->set_model(this);
-    refreshLock = false;
+    this->mRefreshLock = false;
     pluginLog(DDB_LOG_LAYER_INFO, "Notifying dispatcher - task done");
-    threadProgress = 1;
-    mAddressbox->notify();
-}
-
-void TreeFilebrowser::findChildren(std::filesystem::path path, Gtk::TreeNodeChildren child) {
-    auto filelist = Filebrowser::getFileList(path, true, false);
-    std::size_t count = filelist.size();
-    //progressCount += count;
-    if (count > 0) {
-        for (auto &entry : filelist) {
-            if (!mRefreshThreadRun.load()) {
-                pluginLog(DDB_LOG_LAYER_INFO, "Child load canceled by user");
-                return;
-            }
-            Glib::RefPtr<Gdk::Pixbuf> icon = Utils::getIcon(entry, mIconSize);
-            Gtk::TreeModel::iterator iter = append(child);
-            Gtk::TreeRow row = *iter;
-            row[mModelColumns.mColumnIcon] = icon;
-            row[mModelColumns.mColumnName] = entry.path().filename();
-            row[mModelColumns.mColumnURI] = entry.path().string().erase(0, mTreeDirectory.string().size());
-            row[mModelColumns.mColumnTooltip] = Utils::escapeTooltip(entry.path());
-            row[mModelColumns.mColumnVisibility] = true;
-
-            if (entry.is_directory() && !std::filesystem::is_empty(entry)) {
-                this->findChildren(entry.path(), row.children());
-            }
-            //progressIteration++;
-        }
-    }
+    this->mThreadProgress = 1;
+    this->mAddressbox->notify();
 }
 
 void TreeFilebrowser::stopThread() {
-    if(mRefreshThread != NULL) {
-        mRefreshThreadRun = false;
-        mRefreshThread->join();
-        mRefreshThread = NULL;
-        mRefreshThreadRun = true;
-    }
-}
-
-void TreeFilebrowser::getProgress(float* progress) const {
-    if (refreshLock) {
-        *progress = threadProgress;
-    } else {
-        *progress = 1;
+    if(this->mRefreshThread != NULL) {
+        this->mRefreshThreadRunning = false;
+        this->mRefreshThread->join();
+        this->mRefreshThread = NULL;
+        this->mRefreshThreadRunning = true;
     }
 }
 
 void TreeFilebrowser::checkEmptyRoot() {
     if (this->children().empty()) {
         g_idle_add((GSourceFunc)&TreeFilebrowser::fillEmptyRow, this);
+    }
+}
+
+void TreeFilebrowser::fillRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent) {
+    Glib::RefPtr<Gdk::Pixbuf> icon = Utils::getIcon(entry, mIconSize);
+    Gtk::TreeModel::iterator iter;
+    if (parent) {
+        iter = append((*parent));
+    } else {
+        iter = append();
+    }
+    Gtk::TreeRow row = *iter;
+    row[mModelColumns.mColumnIcon] = icon;
+    row[mModelColumns.mColumnName] = entry.path().filename();
+    row[mModelColumns.mColumnURI] = entry.path().string().erase(0, mTreeDirectory.string().size());
+    row[mModelColumns.mColumnTooltip] = Utils::escapeTooltip(entry.path());
+    row[mModelColumns.mColumnVisibility] = true;
+
+    if (entry.is_directory() && !std::filesystem::is_empty(entry)) {
+        this->fillChildrenRow(entry, &row.children());
+    }
+}
+
+void TreeFilebrowser::fillChildrenRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent) {
+    auto filelist = Filebrowser::getFileList(entry.path(), true, false);
+    std::size_t count = filelist.size();
+    if (count > 0) {
+        for (auto &entry : filelist) {
+            if (!mRefreshThreadRunning.load()) {
+                pluginLog(DDB_LOG_LAYER_INFO, "Child load canceled by user");
+                return;
+            }
+            this->fillRow(entry, parent);
+        }
     }
 }
 

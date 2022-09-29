@@ -15,7 +15,7 @@ Container::Container() :
     this->mFilebrowserFilter = FilebrowserFilter::create(mTreeFilebrowser);
     this->mFilebrowserFilter->setModel(mTreeFilebrowser.get());
     this->mSearchbar.setTreeModelFilter(this->mFilebrowserFilter.get());
-    this->mAddressbox.setTreeFilebrowser(this->mTreeFilebrowser.get());
+    this->mAddressbox.initialize(&mTreeView, mFilebrowserFilter, this->mTreeFilebrowser.get());
     this->buildTreeview();
 
     this->mScrolledWindow.set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
@@ -42,7 +42,6 @@ void Container::initialize() {
 
 void Container::buildTreeview() {
     this->mTreeView.set_model(mFilebrowserFilter);
-    this->mAddressbox.initialize(&mTreeView, mFilebrowserFilter);
     this->mTreeFilebrowser->initialize(&this->mTreeView, &this->mAddressbox);
 
     this->mTreeView.append_column("Icon", this->mTreeFilebrowser->mModelColumns.mColumnIcon);
