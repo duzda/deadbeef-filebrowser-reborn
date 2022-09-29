@@ -110,7 +110,12 @@ void TreePopup::addToPlaylist(std::vector<std::string> uris, std::string address
 void TreePopup::popup_open_folder() {
     if (hasSelected()) {
         GError *error = NULL;
-        auto URI = "file:///" + mAddressbox->getAddress() + this->getSelectedURI();
+        std::filesystem::path path = std::filesystem::path(mAddressbox->getAddress() + this->getSelectedURI());
+        std::filesystem::directory_entry entry = std::filesystem::directory_entry(path);
+        if (!entry.is_directory()) {
+            path = entry.path().parent_path();
+        }
+        auto URI = "file:///" + path.string();
         if (!g_app_info_launch_default_for_uri(URI.c_str(), NULL, &error)) {
             g_warning("Failed to oepn uri: %s", error->message);
         }
