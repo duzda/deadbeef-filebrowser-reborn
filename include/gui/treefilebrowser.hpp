@@ -91,12 +91,4 @@ private:
      * @return 0, to remove from idle queue.
      */
     static int fillEmptyRow(void* data);
-
-    /**
-     * To be used via g_idle_add(), clears all rows.
-     * 
-     * @param data pass this.
-     * @return 0, to remove from idle queue.
-     */
-    static int clearRows(void* data);
 };
