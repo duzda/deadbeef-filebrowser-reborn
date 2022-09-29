@@ -32,5 +32,5 @@ DB_plugin_t* ddb_misc_filebrowser_reborn_load(DB_functions_t* api) {
 }
 
 void pluginLog(int level, std::string message) {
-    deadbeef->log_detailed (&plugin.plugin, level, message.c_str());
+    deadbeef->log_detailed(&plugin.plugin, level, message.c_str());
 }
