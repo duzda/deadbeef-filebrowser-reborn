@@ -45,11 +45,11 @@ void TreeFilebrowser::refreshTree() {
         return;
     }
     this->mRefreshLock = true;
+    this->mTreeView->unset_model();
     this->mRefreshThread = new std::thread(&TreeFilebrowser::refreshThread, this);
 }
 
 void TreeFilebrowser::refreshThread() {
-    this->mTreeView->unset_model();
     this->clear();
     pluginLog(DDB_LOG_LAYER_INFO, "Loading tree structure");
     auto filelist = Filebrowser::getFileList(mTreeDirectory, true, false);
