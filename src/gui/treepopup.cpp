@@ -124,6 +124,7 @@ void TreePopup::popup_open_folder() {
 
 void TreePopup::popup_enter_directory() {
     if (hasSelected()) {
+        this->mTreeFilebrowser->stopThread();
         auto URI = mAddressbox->getAddress() + this->getSelectedURI();
         mAddressbox->setAddress(URI);
     }
@@ -132,6 +133,7 @@ void TreePopup::popup_enter_directory() {
 void TreePopup::popup_go_up() {
     auto URI = std::filesystem::path(mAddressbox->getAddress());
     if (URI.has_parent_path()) {
+        this->mTreeFilebrowser->stopThread();
         mAddressbox->setAddress(URI.parent_path());
     }
 }
