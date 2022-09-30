@@ -80,7 +80,7 @@ private:
      * Fills row of treeview, but is allowed to be exited prematurely. (This should be used when adding children of a node)
      * 
      * @param entry Path to the new child.
-     * @param child Parent to of the current entry.
+     * @param child Parent to the current entry.
      */
     void fillChildrenRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent);
 
