@@ -5,6 +5,7 @@
 #include "filebrowsermodel.hpp"
 #include "searchbar.hpp"
 #include "addressbox.hpp"
+#include "treeview.hpp"
 #include "filebrowserfilter.hpp"
 #include "treepopup.hpp"
 
@@ -15,12 +16,11 @@ public:
 private:
     Searchbar mSearchbar;
     Addressbox mAddressbox;
-    Gtk::TreeView mTreeView;
+    TreeView mTreeView;
     TreePopup mTreePopup;
     Gtk::ScrolledWindow mScrolledWindow;
     Glib::RefPtr<FilebrowserModel> mFilebrowserModel;
     Glib::RefPtr<FilebrowserFilter> mFilebrowserFilter;
 
     void initialize();
-    void buildTreeview();
 };

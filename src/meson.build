@@ -17,6 +17,7 @@ source_files = files(
     'gui/filebrowserfilter.cpp',
     'gui/addressbox.cpp',
     'gui/treepopup.cpp',
+    'gui/views/treeview.cpp',
     'plugin/controller.cpp',
     'metadata/readerfactory.cpp',
     'metadata/reader.cpp',
@@ -30,6 +31,7 @@ source_files = files(
 includes = [
     include_directories('../include'), 
     include_directories('../include/gui'), 
+    include_directories('../include/gui/views'), 
     include_directories('../include/plugin'), 
     include_directories('../include/metadata'), 
     include_directories('../include/metadata/abstract'),
