@@ -2,9 +2,6 @@
 
 #include "plugin.hpp"
 
-Reader::Reader() {
-}
-
 Glib::RefPtr<Gdk::Pixbuf> Reader::getImageFromData(TagLib::ByteVector bytes, int size) {
     Glib::RefPtr<Gdk::PixbufLoader> loader = Gdk::PixbufLoader::create();
     loader->set_size(size, size);

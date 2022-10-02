@@ -2,9 +2,6 @@
 
 #include <attachedpictureframe.h>
 
-ID3v2Reader::ID3v2Reader() {
-};
-
 Glib::RefPtr<Gdk::Pixbuf> ID3v2Reader::getImageFromTag(TagLib::ID3v2::Tag* tag, int size) {
     Glib::RefPtr<Gdk::Pixbuf> image;
 

@@ -7,7 +7,6 @@
 
 class Reader {
 public:
-    Reader();
     virtual ~Reader();
 
     virtual Glib::RefPtr<Gdk::Pixbuf> getImage(std::filesystem::path path, int size) = 0;
