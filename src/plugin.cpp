@@ -26,11 +26,12 @@ DB_plugin_t* ddb_misc_filebrowser_reborn_load(DB_functions_t* api) {
     plugin.plugin.website = "https://www.github.com/duzda/deadbeef-filebrowser-reborn";
     plugin.plugin.connect = &Controller::pluginConnect;
     plugin.plugin.disconnect = &Controller::pluginDisconnect;
+    plugin.plugin.flags = DDB_PLUGIN_FLAG_LOGGING;
     plugin.plugin.configdialog = config_dialog;
 
     return DB_PLUGIN(&plugin.plugin);
 }
 
 void pluginLog(int level, std::string message) {
-    deadbeef->log_detailed(&plugin.plugin, level, message.c_str());
+    deadbeef->log_detailed(&plugin.plugin, level, (message + "\n").c_str());
 }
