@@ -4,6 +4,9 @@
 
 #include "filebrowsermodel.hpp"
 
+/**
+ * Filter for FilebrowserModel, enables for fast searches set via Searchbar in the application.
+ */
 class FilebrowserFilter : public Gtk::TreeModelFilter
 {
 public:

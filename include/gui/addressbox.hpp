@@ -5,6 +5,10 @@
 #include "filebrowsermodel.hpp"
 #include "filebrowserfilter.hpp"
 
+/**
+ * Extends Gtk::HBox, contains address bar and Go! button.
+ * Styling happends in the constructor.
+ */
 class Addressbox : public Gtk::HBox
 {
 public:

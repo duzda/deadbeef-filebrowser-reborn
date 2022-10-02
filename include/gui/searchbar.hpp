@@ -4,6 +4,9 @@
 
 #include "filebrowserfilter.hpp"
 
+/**
+ * Extends Gtk::Entry, communicates with FilebrowserFilter to filter out results.
+ */
 class Searchbar : public Gtk::Entry {
 public:
     void setTreeModelFilter(FilebrowserFilter* filter);

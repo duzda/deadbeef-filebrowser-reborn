@@ -10,6 +10,9 @@
 
 class Addressbox;
 
+/**
+ * Extends Gtk::TreeStore, container for all the data, see ModelColumns for used columns.
+ */
 class FilebrowserModel : public Gtk::TreeStore {
 public:
     ModelColumns mModelColumns;

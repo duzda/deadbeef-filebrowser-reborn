@@ -9,6 +9,9 @@
 #include "filebrowserfilter.hpp"
 #include "treepopup.hpp"
 
+/**
+ * Extends Gtk::VBox, main container for the application, also bootstraps all other controls.
+ */
 class Container : public Gtk::VBox {
 public:
     Container();

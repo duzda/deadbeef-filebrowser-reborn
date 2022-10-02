@@ -6,6 +6,9 @@
 #include "filebrowserfilter.hpp"
 #include "addressbox.hpp"
 
+/**
+ * Extends Gtk::Menu, container for on click events for TreeView
+ */
 class TreePopup : public Gtk::Menu {
 public:
     /**
