@@ -2,7 +2,7 @@
 
 #include <gtkmm.h>
 
-#include "treefilebrowser.hpp"
+#include "filebrowsermodel.hpp"
 #include "searchbar.hpp"
 #include "addressbox.hpp"
 #include "filebrowserfilter.hpp"
@@ -18,7 +18,7 @@ private:
     Gtk::TreeView mTreeView;
     TreePopup mTreePopup;
     Gtk::ScrolledWindow mScrolledWindow;
-    Glib::RefPtr<TreeFilebrowser> mTreeFilebrowser;
+    Glib::RefPtr<FilebrowserModel> mFilebrowserModel;
     Glib::RefPtr<FilebrowserFilter> mFilebrowserFilter;
 
     void initialize();

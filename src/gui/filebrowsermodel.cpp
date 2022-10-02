@@ -1,4 +1,4 @@
-#include "treefilebrowser.hpp"
+#include "filebrowsermodel.hpp"
 
 #include <boost/algorithm/string.hpp>
 
@@ -7,32 +7,32 @@
 #include "plugin.hpp"
 #include "addressbox.hpp"
 
-TreeFilebrowser::TreeFilebrowser() {
+FilebrowserModel::FilebrowserModel() {
     this->set_column_types(mModelColumns);
 }
 
-Glib::RefPtr<TreeFilebrowser> TreeFilebrowser::create() {
-    return Glib::RefPtr<TreeFilebrowser>(new TreeFilebrowser());
+Glib::RefPtr<FilebrowserModel> FilebrowserModel::create() {
+    return Glib::RefPtr<FilebrowserModel>(new FilebrowserModel());
 }
 
-void TreeFilebrowser::setNeedleState(bool newState) {
+void FilebrowserModel::setNeedleState(bool newState) {
     this->mIsNeedleSet = newState;
 }
 
-void TreeFilebrowser::initialize(Gtk::TreeView* treeview, Addressbox* addressbox) {
+void FilebrowserModel::initialize(Gtk::TreeView* treeview, Addressbox* addressbox) {
     this->mTreeView = treeview;
     this->mAddressbox = addressbox;
 }
 
-void TreeFilebrowser::setIconSize(uint newIconSize) {
+void FilebrowserModel::setIconSize(uint newIconSize) {
     this->mIconSize = newIconSize;
 }
 
-float TreeFilebrowser::getProgress() {
+float FilebrowserModel::getProgress() {
     return (this->mRefreshLock ? (float)this->mThreadProgress : 1);
 }
 
-void TreeFilebrowser::setTreeRoot(std::filesystem::path newDirectory) {
+void FilebrowserModel::setTreeRoot(std::filesystem::path newDirectory) {
     if (this->mRefreshLock) {
         return;
     }
@@ -40,16 +40,16 @@ void TreeFilebrowser::setTreeRoot(std::filesystem::path newDirectory) {
     this->refreshTree();
 }
 
-void TreeFilebrowser::refreshTree() {
+void FilebrowserModel::refreshTree() {
     if (this->mRefreshLock) {
         return;
     }
     this->mRefreshLock = true;
     this->mTreeView->unset_model();
-    this->mRefreshThread = new std::thread(&TreeFilebrowser::refreshThread, this);
+    this->mRefreshThread = new std::thread(&FilebrowserModel::refreshThread, this);
 }
 
-void TreeFilebrowser::refreshThread() {
+void FilebrowserModel::refreshThread() {
     this->clear();
     pluginLog(DDB_LOG_LAYER_INFO, "Loading tree structure");
     auto filelist = Filebrowser::getFileList(mTreeDirectory, true, false);
@@ -80,7 +80,7 @@ void TreeFilebrowser::refreshThread() {
     this->mAddressbox->notify();
 }
 
-void TreeFilebrowser::stopThread() {
+void FilebrowserModel::stopThread() {
     if(this->mRefreshThread != NULL) {
         this->mRefreshThreadRunning = false;
         this->mRefreshThread->join();
@@ -89,7 +89,7 @@ void TreeFilebrowser::stopThread() {
     }
 }
 
-void TreeFilebrowser::fillRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent) {
+void FilebrowserModel::fillRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent) {
     Glib::RefPtr<Gdk::Pixbuf> icon = Utils::getIcon(entry, mIconSize);
     Gtk::TreeModel::iterator iter;
     if (parent) {
@@ -109,7 +109,7 @@ void TreeFilebrowser::fillRow(std::filesystem::directory_entry entry, const Gtk:
     }
 }
 
-void TreeFilebrowser::fillChildrenRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent) {
+void FilebrowserModel::fillChildrenRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent) {
     auto filelist = Filebrowser::getFileList(entry.path(), true, false);
     std::size_t count = filelist.size();
     if (count > 0) {
@@ -123,7 +123,7 @@ void TreeFilebrowser::fillChildrenRow(std::filesystem::directory_entry entry, co
     }
 }
 
-void TreeFilebrowser::fillEmptyRow() {
+void FilebrowserModel::fillEmptyRow() {
     auto row = *(this->append());
     Glib::RefPtr<Gdk::Pixbuf> emptyIcon;
     row[this->mModelColumns.mColumnIcon] = emptyIcon;
@@ -138,5 +138,5 @@ void TreeFilebrowser::fillEmptyRow() {
     }
 }
 
-TreeFilebrowser::~TreeFilebrowser() {
+FilebrowserModel::~FilebrowserModel() {
 }

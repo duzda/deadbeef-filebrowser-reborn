@@ -20,10 +20,10 @@ mGoButton() {
     mDispatcher.connect(sigc::mem_fun(*this, &Addressbox::onNotify));
 }
 
-void Addressbox::initialize(Gtk::TreeView* treeview, Glib::RefPtr<FilebrowserFilter> filter, TreeFilebrowser* treefb) {
+void Addressbox::initialize(Gtk::TreeView* treeview, Glib::RefPtr<FilebrowserFilter> filter, FilebrowserModel* treefb) {
     this->mTreeView = treeview;
     this->mFilebrowserFilter = filter;
-    this->mTreeFilebrowser = treefb;
+    this->mFilebrowserModel = treefb;
 }
 
 void Addressbox::setAddress(std::string newAddress) {
@@ -44,7 +44,7 @@ void Addressbox::onNotify() {
 }
 
 void Addressbox::updateProgressState() {
-    float progress = mTreeFilebrowser->getProgress();
+    float progress = mFilebrowserModel->getProgress();
     if (progress == 1) {
         pluginLog(DDB_LOG_LAYER_INFO, "Thread reported progress done");
         this->mInProgress = false;
@@ -66,7 +66,7 @@ void Addressbox::updateProgressState() {
 void Addressbox::on_go_button_click() {
     if (this->mInProgress) {
         pluginLog(DDB_LOG_LAYER_INFO, "Still in progress");
-        this->mTreeFilebrowser->stopThread();
+        this->mFilebrowserModel->stopThread();
         return;
     }
     this->mAddress = this->mAddressBar.get_text();
@@ -74,7 +74,7 @@ void Addressbox::on_go_button_click() {
     deadbeef->conf_set_str(FBR_DEFAULT_PATH, this->mAddress.c_str());
     this->mAddressBar.set_text(this->mAddress);
     if (std::filesystem::exists(this->mAddress) && std::filesystem::is_directory(this->mAddress)) {
-        this->mTreeFilebrowser->setTreeRoot(this->mAddress);
+        this->mFilebrowserModel->setTreeRoot(this->mAddress);
     }
 }
 

@@ -9,13 +9,13 @@ Container::Container() :
     mAddressbox(),
     mScrolledWindow()
 {
-    this->mTreeFilebrowser = TreeFilebrowser::create();
-    mTreeFilebrowser->setIconSize(deadbeef->conf_get_int(FBR_ICON_SIZE, 32));
+    this->mFilebrowserModel = FilebrowserModel::create();
+    mFilebrowserModel->setIconSize(deadbeef->conf_get_int(FBR_ICON_SIZE, 32));
 
-    this->mFilebrowserFilter = FilebrowserFilter::create(mTreeFilebrowser);
-    this->mFilebrowserFilter->setModel(mTreeFilebrowser.get());
+    this->mFilebrowserFilter = FilebrowserFilter::create(mFilebrowserModel);
+    this->mFilebrowserFilter->setModel(mFilebrowserModel.get());
     this->mSearchbar.setTreeModelFilter(this->mFilebrowserFilter.get());
-    this->mAddressbox.initialize(&mTreeView, mFilebrowserFilter, this->mTreeFilebrowser.get());
+    this->mAddressbox.initialize(&mTreeView, mFilebrowserFilter, this->mFilebrowserModel.get());
     this->buildTreeview();
 
     this->mScrolledWindow.set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
@@ -42,10 +42,10 @@ void Container::initialize() {
 
 void Container::buildTreeview() {
     this->mTreeView.set_model(mFilebrowserFilter);
-    this->mTreeFilebrowser->initialize(&this->mTreeView, &this->mAddressbox);
+    this->mFilebrowserModel->initialize(&this->mTreeView, &this->mAddressbox);
 
-    this->mTreeView.append_column("Icon", this->mTreeFilebrowser->mModelColumns.mColumnIcon);
-    this->mTreeView.append_column("Name", this->mTreeFilebrowser->mModelColumns.mColumnName);
+    this->mTreeView.append_column("Icon", this->mFilebrowserModel->mModelColumns.mColumnIcon);
+    this->mTreeView.append_column("Name", this->mFilebrowserModel->mModelColumns.mColumnName);
 
     for (uint i = 0; i < 2; i++) {
         this->mTreeView.get_column(i)->set_spacing(0);
@@ -62,7 +62,7 @@ void Container::buildTreeview() {
     this->mTreeView.set_has_tooltip(true);
     this->mTreeView.set_tooltip_column(3);
 
-    this->mTreePopup.initialize(&this->mTreeView, this->mTreeFilebrowser.get(), this->mFilebrowserFilter.get(), &this->mAddressbox);
+    this->mTreePopup.initialize(&this->mTreeView, this->mFilebrowserModel.get(), this->mFilebrowserFilter.get(), &this->mAddressbox);
 }
 
 Container::~Container() {

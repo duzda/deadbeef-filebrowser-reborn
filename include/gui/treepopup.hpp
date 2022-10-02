@@ -2,7 +2,7 @@
 
 #include <gtkmm.h>
 
-#include "treefilebrowser.hpp"
+#include "filebrowsermodel.hpp"
 #include "filebrowserfilter.hpp"
 #include "addressbox.hpp"
 
@@ -11,7 +11,7 @@ public:
     /**
      * Binds events to be callable etc.
      */
-    void initialize(Gtk::TreeView* treeview, TreeFilebrowser* treefb, FilebrowserFilter* filter, Addressbox* addressbox);
+    void initialize(Gtk::TreeView* treeview, FilebrowserModel* treefb, FilebrowserFilter* filter, Addressbox* addressbox);
     TreePopup();
     ~TreePopup();
 private:
@@ -29,7 +29,7 @@ private:
     Glib::RefPtr<Gio::Menu> mMenu;
     Glib::RefPtr<Gio::SimpleActionGroup> mActionGroup;
     Gtk::TreeView* mTreeView;
-    TreeFilebrowser* mTreeFilebrowser;
+    FilebrowserModel* mFilebrowserModel;
     FilebrowserFilter* mFilter;
     Addressbox* mAddressbox;
 

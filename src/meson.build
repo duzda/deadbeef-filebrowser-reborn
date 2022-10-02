@@ -12,7 +12,7 @@ source_files = files(
     'utils.cpp',
     'gui/modelcolumns.cpp',
     'gui/container.cpp',
-    'gui/treefilebrowser.cpp',
+    'gui/filebrowsermodel.cpp',
     'gui/searchbar.cpp',
     'gui/filebrowserfilter.cpp',
     'gui/addressbox.cpp',

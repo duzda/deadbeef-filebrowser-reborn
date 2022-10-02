@@ -6,18 +6,18 @@ FilebrowserFilter::FilebrowserFilter(Glib::RefPtr<Gtk::TreeModel> model) :
 Gtk::TreeModelFilter(model) {
 }
 
-Glib::RefPtr<FilebrowserFilter> FilebrowserFilter::create(Glib::RefPtr<TreeFilebrowser> treefb) {
+Glib::RefPtr<FilebrowserFilter> FilebrowserFilter::create(Glib::RefPtr<FilebrowserModel> treefb) {
     return Glib::RefPtr<FilebrowserFilter>(new FilebrowserFilter(treefb));
 }
 
 void FilebrowserFilter::setNeedle(std::string newNeedle) {
     this->mNeedle = boost::to_lower_copy(newNeedle);
-    this->mTreeFilebrowser->setNeedleState(this->mNeedle.empty());
+    this->mFilebrowserModel->setNeedleState(this->mNeedle.empty());
     this->refilter();
 }
 
-void FilebrowserFilter::setModel(TreeFilebrowser* treefb) {
-    this->mTreeFilebrowser = treefb;
+void FilebrowserFilter::setModel(FilebrowserModel* treefb) {
+    this->mFilebrowserModel = treefb;
     this->set_visible_func(mem_fun(*this, &FilebrowserFilter::filter_func));
 }
 
@@ -34,7 +34,7 @@ bool FilebrowserFilter::filter_func(Gtk::TreeIter iter) {
         return false;
     }
 
-    return (this->mNeedle.empty() || boost::algorithm::contains(boost::to_lower_copy(iter->get_value(this->mTreeFilebrowser->mModelColumns.mColumnURI)), this->mNeedle));
+    return (this->mNeedle.empty() || boost::algorithm::contains(boost::to_lower_copy(iter->get_value(this->mFilebrowserModel->mModelColumns.mColumnURI)), this->mNeedle));
 }
 
 FilebrowserFilter::~FilebrowserFilter() {

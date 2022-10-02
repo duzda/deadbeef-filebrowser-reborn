@@ -10,10 +10,10 @@
 
 class Addressbox;
 
-class TreeFilebrowser : public Gtk::TreeStore {
+class FilebrowserModel : public Gtk::TreeStore {
 public:
     ModelColumns mModelColumns;
-    static Glib::RefPtr<TreeFilebrowser> create();
+    static Glib::RefPtr<FilebrowserModel> create();
     void setNeedleState(bool newState);
     void initialize(Gtk::TreeView* treeview, Addressbox* addressbox);
     void setIconSize(uint newValue);
@@ -46,8 +46,8 @@ public:
     void stopThread();
 
 private:
-    TreeFilebrowser();
-    ~TreeFilebrowser();
+    FilebrowserModel();
+    ~FilebrowserModel();
 
     std::filesystem::path mTreeDirectory;
     Gtk::TreeView* mTreeView;

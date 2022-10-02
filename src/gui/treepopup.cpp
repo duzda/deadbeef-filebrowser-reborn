@@ -28,9 +28,9 @@ TreePopup::TreePopup() {
     this->bind_model(mMenu, true);
 }
 
-void TreePopup::initialize(Gtk::TreeView* treeview, TreeFilebrowser* treefb, FilebrowserFilter* filter, Addressbox* addressbox) {
+void TreePopup::initialize(Gtk::TreeView* treeview, FilebrowserModel* treefb, FilebrowserFilter* filter, Addressbox* addressbox) {
     this->mTreeView = treeview;
-    this->mTreeFilebrowser = treefb;
+    this->mFilebrowserModel = treefb;
     this->mFilter = filter;
     this->mAddressbox = addressbox;
 
@@ -124,7 +124,7 @@ void TreePopup::popup_open_folder() {
 
 void TreePopup::popup_enter_directory() {
     if (hasSelected()) {
-        this->mTreeFilebrowser->stopThread();
+        this->mFilebrowserModel->stopThread();
         auto URI = mAddressbox->getAddress() + this->getSelectedURI();
         mAddressbox->setAddress(URI);
     }
@@ -133,24 +133,24 @@ void TreePopup::popup_enter_directory() {
 void TreePopup::popup_go_up() {
     auto URI = std::filesystem::path(mAddressbox->getAddress());
     if (URI.has_parent_path()) {
-        this->mTreeFilebrowser->stopThread();
+        this->mFilebrowserModel->stopThread();
         mAddressbox->setAddress(URI.parent_path());
     }
 }
 
 void TreePopup::popup_refresh() {
-    mTreeFilebrowser->refreshTree();
+    mFilebrowserModel->refreshTree();
 }
 
 std::string TreePopup::getSelectedURI() {
-    return mFilter->get_iter(mTreeView->get_selection()->get_selected_rows()[0])->get_value(mTreeFilebrowser->mModelColumns.mColumnURI);
+    return mFilter->get_iter(mTreeView->get_selection()->get_selected_rows()[0])->get_value(mFilebrowserModel->mModelColumns.mColumnURI);
 }
 
 std::vector<std::string> TreePopup::getSelectedURIs() {
     std::vector<std::string> uris;
     auto rows = mTreeView->get_selection()->get_selected_rows();
     for (auto &row : rows) {
-        uris.push_back(mFilter->get_iter(row)->get_value(mTreeFilebrowser->mModelColumns.mColumnURI));
+        uris.push_back(mFilter->get_iter(row)->get_value(mFilebrowserModel->mModelColumns.mColumnURI));
     }
 
     return uris;

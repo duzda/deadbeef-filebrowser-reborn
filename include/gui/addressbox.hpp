@@ -2,13 +2,13 @@
 
 #include <gtkmm.h>
 
-#include "treefilebrowser.hpp"
+#include "filebrowsermodel.hpp"
 #include "filebrowserfilter.hpp"
 
 class Addressbox : public Gtk::HBox
 {
 public:
-    void initialize(Gtk::TreeView* treeview, Glib::RefPtr<FilebrowserFilter> filter, TreeFilebrowser* treefb);
+    void initialize(Gtk::TreeView* treeview, Glib::RefPtr<FilebrowserFilter> filter, FilebrowserModel* treefb);
     void setAddress(std::string newAddres);
     std::string getAddress();
 
@@ -22,7 +22,7 @@ public:
 private:
     Gtk::Button mGoButton;
     Gtk::Entry mAddressBar;
-    TreeFilebrowser* mTreeFilebrowser;
+    FilebrowserModel* mFilebrowserModel;
     Gtk::TreeView* mTreeView;
     Glib::RefPtr<FilebrowserFilter> mFilebrowserFilter;
     std::string mAddress;
