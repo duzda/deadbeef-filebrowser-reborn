@@ -29,7 +29,8 @@
                 "/usr/include/gdkmm-3.0",
                 "/usr/include/gdk-pixbuf-2.0",
                 "/usr/lib64/giomm-2.4/include",
-                "/usr/include/giomm-2.4"
+                "/usr/include/giomm-2.4",
+                "/usr/include/taglib"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
