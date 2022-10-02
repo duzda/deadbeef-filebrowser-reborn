@@ -3,11 +3,6 @@
 #include <gtkmm.h>
 #include <filesystem>
 
-/**
- * Used in createCachePath, represents name of the application in cache.
- */
-const std::string CACHE_PATH = "deadbeef-filebrowser-reborn";
-
 class Utils {
 public:
     /**
@@ -61,12 +56,8 @@ private:
     /**
      * Construct path to cache file for path at desired resolution.
      * 
-     * The filename gets transformed as descibed:
-     * /home/user/Music/Artist - Album =>
-     * _home_user_Music_Artist - Album
-     * 
      * The full path to the file is:
-     * ~/.cache/CACHE_PATH/icons/size/filename
+     * ~/.cache/deadbeef/filebrowser/icons/size/filename
      * 
      * @param path Path of the current folder we need to create cache file for.
      * @param size Resolution for the cache file.

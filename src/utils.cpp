@@ -70,26 +70,14 @@ std::vector<std::string> Utils::createValidExtensions() {
 }
 
 std::filesystem::path Utils::createCachePath(std::filesystem::path path, uint size) {
-    //Also check XDG_CACHE_HOME as first default, home should be fallback or use the deadbeef cache
-    //std::filesystem::path cache = std::filesystem::path(deadbeef->get_system_dir(DDB_SYS_DIR_CACHE));
-    std::filesystem::path cache = getenv("HOME");
-    cache.append(".cache");
-    cache.append(CACHE_PATH + "/icons/" + std::to_string(size) + std::string("/"));
+    std::string cache = deadbeef->get_system_dir(DDB_SYS_DIR_CACHE);
+    cache += "/filebrowser/icons/" + std::to_string(size) + std::string("/");
 
     if (!std::filesystem::exists(cache)) {
         std::filesystem::create_directories(cache);
     }
 
-    std::string editedPath = path.string();
-    for (auto &c : editedPath) {
-        if (c == '/') {
-            c = '_';
-        }
-    }
+    cache += std::to_string(std::hash<std::string>{}(path.string()));
 
-    if (editedPath.size() > 255) {
-        editedPath.resize(255);
-    }
-    cache.append(editedPath);
     return cache;
 }
