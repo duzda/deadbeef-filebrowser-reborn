@@ -5,24 +5,13 @@
 #include "filebrowser.hpp"
 #include "plugin.hpp"
 #include "settings.hpp"
+#include "coverfirst.hpp"
 
 Glib::RefPtr<Gdk::Pixbuf> Utils::getIcon(std::filesystem::path path, uint size) {
     Glib::RefPtr<Gdk::Pixbuf> icon;
 
-    if (std::filesystem::is_directory(path)) {
-        std::string outputName;
-        auto currentPath = Utils::createCachePath(path, size);
-        if (std::filesystem::exists(currentPath)) {
-            icon = Gdk::Pixbuf::create_from_file(currentPath);
-        } else if (Filebrowser::hasFile(path, {"cover.jpg", "cover.png", "front.jpg", "front.png"}, &outputName)) {
-            icon = Gdk::Pixbuf::create_from_file(outputName, -1, size, true);
-            icon->save(currentPath, "png");
-        } else {
-            icon = Utils::getIconByName("folder", size);
-        }
-    } else {
-        icon = Utils::getIconByName("audio-x-generic", size);
-    }
+    Cache::Covers::CoverFirst coverfirst;
+    icon = coverfirst.getIcon(path, size);
 
     return icon;
 }

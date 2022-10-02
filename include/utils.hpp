@@ -49,9 +49,6 @@ public:
      * @return Vector of all supported extensions
      */
     static std::vector<std::string> createValidExtensions();
-private:
-    Utils();
-    ~Utils();
 
     /**
      * Construct path to cache file for path at desired resolution.
@@ -65,4 +62,7 @@ private:
      * @return Path to the cache file
      */
     static std::filesystem::path createCachePath(std::filesystem::path path, uint size);
+private:
+    Utils();
+    ~Utils();
 };

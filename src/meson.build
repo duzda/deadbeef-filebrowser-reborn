@@ -10,6 +10,9 @@ source_files = files(
     'plugin.cpp',
     'filebrowser.cpp',
     'utils.cpp',
+    'cache/covers/cover.cpp',
+    'cache/covers/implementation/coverfirst.cpp',
+    'cache/covers/implementation/metadatafirst.cpp',
     'gui/modelcolumns.cpp',
     'gui/container.cpp',
     'gui/filebrowsermodel.cpp',
@@ -30,6 +33,9 @@ source_files = files(
 
 includes = [
     include_directories('../include'), 
+    include_directories('../include/cache'),
+    include_directories('../include/cache/covers'),
+    include_directories('../include/cache/covers/implementation'),
     include_directories('../include/gui'), 
     include_directories('../include/gui/views'), 
     include_directories('../include/plugin'), 
