@@ -3,7 +3,7 @@
 #include "settings.hpp"
 
 ddb_gtkui_t* Controller::gtkui_plugin = nullptr;
-Container* Controller::container = nullptr;
+GUI::Container* Controller::container = nullptr;
 
 int Controller::pluginConnect() {
     Controller::gtkui_plugin = (ddb_gtkui_t*)deadbeef->plug_get_for_id(DDB_GTKUI_PLUGIN_ID);
@@ -28,7 +28,7 @@ ddb_gtkui_widget_t* Controller::guiPluginConnect() {
     w->widget = gtk_event_box_new();
     gtk_widget_set_can_focus(w->widget, false);
 
-    Controller::container = new Container();
+    Controller::container = new GUI::Container();
     gtk_container_add(GTK_CONTAINER(w->widget), (GtkWidget*)Controller::container->gobj());
     gtk_widget_show_all(w->widget);
 

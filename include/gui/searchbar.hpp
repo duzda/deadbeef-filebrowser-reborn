@@ -2,18 +2,19 @@
 
 #include <gtkmm.h>
 
-#include "filebrowserfilter.hpp"
+#include "gui.hpp"
 
 /**
  * Extends Gtk::Entry, communicates with FilebrowserFilter to filter out results.
  */
-class Searchbar : public Gtk::Entry {
+class GUI::Searchbar : public Gtk::Entry {
 public:
-    void setTreeModelFilter(FilebrowserFilter* filter);
     Searchbar();
     ~Searchbar();
+
+    void setTreeFilter(GUI::FBTreeFilter* filter);
 private:
-    FilebrowserFilter* mFilebrowserFilter;
+    GUI::FBTreeFilter* mFilter;
     sigc::connection mTimer;
 
     const uint timeoutValue = 100;

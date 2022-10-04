@@ -1,15 +1,17 @@
 #include "searchbar.hpp"
 
+#include "fbtreefilter.hpp"
 #include "utils.hpp"
+
+using namespace GUI;
 
 Searchbar::Searchbar() {
     auto primaryIcon = this->property_primary_icon_pixbuf();
     primaryIcon = Utils::getIconByName("system-search", 16);
 }
 
-void Searchbar::setTreeModelFilter(FilebrowserFilter* filter) {
-    this->mFilebrowserFilter = filter;
-
+void Searchbar::setTreeFilter(FBTreeFilter* filter) {
+    this->mFilter = filter;
     this->signal_changed().connect(sigc::mem_fun(this, &Searchbar::on_change));
 }
 
@@ -19,7 +21,7 @@ void Searchbar::on_change() {
 }
 
 bool Searchbar::on_timeout() {
-    this->mFilebrowserFilter->setNeedle(this->get_text());
+    this->mFilter->setNeedle(this->get_text());
     return false;
 }
 

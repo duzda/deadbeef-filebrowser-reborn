@@ -2,21 +2,20 @@
 
 #include <gtkmm.h>
 
-#include "filebrowsermodel.hpp"
-#include "filebrowserfilter.hpp"
-#include "addressbox.hpp"
+#include "gui.hpp"
 
 /**
  * Extends Gtk::Menu, container for on click events for TreeView
  */
-class TreePopup : public Gtk::Menu {
+class GUI::FBTreePopup : public Gtk::Menu {
 public:
+    FBTreePopup();
+    ~FBTreePopup();
+
     /**
      * Binds events to be callable etc.
      */
-    void initialize(Gtk::TreeView* treeview, FilebrowserModel* treefb, FilebrowserFilter* filter, Addressbox* addressbox);
-    TreePopup();
-    ~TreePopup();
+    void initialize(GUI::FBTreeView* view, GUI::FBTreeModel* model, GUI::FBTreeFilter* filter, GUI::Addressbox* addressbox);
 private:
     /**
      * Function arguments for addToPlaylist when forking thread
@@ -31,10 +30,10 @@ private:
 
     Glib::RefPtr<Gio::Menu> mMenu;
     Glib::RefPtr<Gio::SimpleActionGroup> mActionGroup;
-    Gtk::TreeView* mTreeView;
-    FilebrowserModel* mFilebrowserModel;
-    FilebrowserFilter* mFilter;
-    Addressbox* mAddressbox;
+    GUI::FBTreeView* mView;
+    GUI::FBTreeModel* mModel;
+    GUI::FBTreeFilter* mFilter;
+    GUI::Addressbox* mAddressbox;
 
     bool on_click(GdkEventButton* event);
 
@@ -64,26 +63,4 @@ private:
      * Calls addToPlaylist, make sure to pass structAddToPlaylist as argument.
      */
     static void threadedReplacePlaylist(void* ctx);
-
-    // Helper functions
-    /**
-     * Returns selected URI from mTreeView.
-     * 
-     * @return URI of selected row
-     */
-    std::string getSelectedURI();
-
-    /**
-     * Returns all selected URIs from mTreeView.
-     * 
-     * @return Vector of selected rows
-     */
-    std::vector<std::string> getSelectedURIs();
-
-    /**
-     * Returns true if any row in mTreeView is selected.
-     * 
-     * @return True if any row is selected, false otherwise.
-     */
-    bool hasSelected();
 };

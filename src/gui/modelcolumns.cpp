@@ -1,9 +1,11 @@
 #include "modelcolumns.hpp"
 
+using namespace GUI;
+
 ModelColumns::ModelColumns() {
-    this->add(this->mColumnIcon);
-    this->add(this->mColumnName);
-    this->add(this->mColumnURI);
-    this->add(this->mColumnTooltip);
-    this->add(this->mColumnVisibility);
+    this->add(this->ColumnIcon);
+    this->add(this->ColumnName);
+    this->add(this->ColumnURI);
+    this->add(this->ColumnTooltip);
+    this->add(this->ColumnVisibility);
 }

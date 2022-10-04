@@ -1,10 +1,15 @@
 #include "addressbox.hpp"
 
-#include "filesystem"
+#include <filesystem>
 
+#include "dispatcherbridge.hpp"
+#include "fbtreemodel.hpp"
+#include "fbtreeview.hpp"
 #include "plugin.hpp"
 #include "settings.hpp"
 #include "utils.hpp"
+
+using namespace GUI;
 
 Addressbox::Addressbox() :
 mGoButton() {
@@ -13,68 +18,48 @@ mGoButton() {
     this->mGoButton.set_margin_bottom(1);
     this->mGoButton.set_margin_left(1);
     this->mGoButton.set_margin_right(1);
-    this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName("go-next", 16))));
+    this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName("go-next", ICON_SIZE))));
     this->pack_start(this->mAddressBar, true, true);
     this->pack_start(this->mGoButton, false, true);
-
-    mDispatcher.connect(sigc::mem_fun(*this, &Addressbox::onNotify));
 }
 
-void Addressbox::initialize(Gtk::TreeView* treeview, Glib::RefPtr<FilebrowserFilter> filter, FilebrowserModel* treefb) {
-    this->mTreeView = treeview;
-    this->mFilebrowserFilter = filter;
-    this->mFilebrowserModel = treefb;
+void Addressbox::initialize(DispatcherBridge* bridge, FBTreeView* view, FBTreeFilter* filter, FBTreeModel* model) {
+    this->mBridge = bridge;
+    this->mView = view;
+    this->mFilter = filter;
+    this->mModel = model;
 }
 
-void Addressbox::setAddress(std::string newAddress) {
-    this->mAddressBar.set_text(newAddress);
+void Addressbox::setAddress(std::string address) {
+    this->mAddressBar.set_text(address);
     this->on_go_button_click();
 }
 
 std::string Addressbox::getAddress() {
-    return this->mAddress;
+    return this->mAddressBar.get_text();
 }
 
-void Addressbox::notify() {
-    mDispatcher.emit();
+void Addressbox::setProgress(float progress) {
+    this->mAddressBar.set_progress_fraction(progress);
 }
 
-void Addressbox::onNotify() {
-    this->updateProgressState();
-}
-
-void Addressbox::updateProgressState() {
-    float progress = mFilebrowserModel->getProgress();
-    if (progress == 1) {
-        pluginLog(DDB_LOG_LAYER_INFO, "Thread reported progress done");
-        this->mInProgress = false;
-        this->mAddressBar.set_sensitive(true);
-        this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName("go-next", 16))));
-        this->mAddressBar.set_progress_fraction(0);
-        this->mTreeView->set_model(this->mFilebrowserFilter);
-    } else {
-        if (!this->mInProgress) {
-            pluginLog(DDB_LOG_LAYER_INFO, "Thread just started running, changing buttons");
-            this->mAddressBar.set_sensitive(false);
-            this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName("process-stop", 16))));
-            this->mInProgress = true;
-        }
-        this->mAddressBar.set_progress_fraction(progress);
-    }
+void Addressbox::setState(bool running) {
+    this->mAddressBar.set_sensitive(running);
+    this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName(running ? "go-next" : "process-stop", ICON_SIZE))));
 }
 
 void Addressbox::on_go_button_click() {
-    if (this->mInProgress) {
+    if (mBridge->inProgress()) {
         pluginLog(DDB_LOG_LAYER_INFO, "Still in progress");
-        this->mFilebrowserModel->stopThread();
+        this->mModel->stopThread();
         return;
     }
-    this->mAddress = this->mAddressBar.get_text();
-    this->mAddress = this->makeValidPath(this->mAddress);
-    deadbeef->conf_set_str(FBR_DEFAULT_PATH, this->mAddress.c_str());
-    this->mAddressBar.set_text(this->mAddress);
-    if (std::filesystem::exists(this->mAddress) && std::filesystem::is_directory(this->mAddress)) {
-        this->mFilebrowserModel->setTreeRoot(this->mAddress);
+    auto address = this->mAddressBar.get_text();
+    address = this->makeValidPath(address);
+    deadbeef->conf_set_str(FBR_DEFAULT_PATH, address.c_str());
+    this->mAddressBar.set_text(address);
+    if (std::filesystem::exists((std::string)address) && std::filesystem::is_directory((std::string)address)) {
+        this->mModel->setTreeRoot((std::string)address);
     }
 }
 

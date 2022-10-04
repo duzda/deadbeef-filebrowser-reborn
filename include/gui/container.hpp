@@ -2,28 +2,29 @@
 
 #include <gtkmm.h>
 
-#include "filebrowsermodel.hpp"
+#include "gui.hpp"
+#include "dispatcherbridge.hpp"
 #include "searchbar.hpp"
 #include "addressbox.hpp"
-#include "treeview.hpp"
-#include "filebrowserfilter.hpp"
-#include "treepopup.hpp"
+#include "fbtreeview.hpp"
+#include "fbtreepopup.hpp"
 
 /**
  * Extends Gtk::VBox, main container for the application, also bootstraps all other controls.
  */
-class Container : public Gtk::VBox {
+class GUI::Container : public Gtk::VBox {
 public:
     Container();
     ~Container();
 private:
-    Searchbar mSearchbar;
-    Addressbox mAddressbox;
-    TreeView mTreeView;
-    TreePopup mTreePopup;
+    GUI::DispatcherBridge mBridge;
+    GUI::Searchbar mSearchbar;
+    GUI::Addressbox mAddressbox;
+    GUI::FBTreeView mView;
+    GUI::FBTreePopup mTreePopup;
     Gtk::ScrolledWindow mScrolledWindow;
-    Glib::RefPtr<FilebrowserModel> mFilebrowserModel;
-    Glib::RefPtr<FilebrowserFilter> mFilebrowserFilter;
+    Glib::RefPtr<GUI::FBTreeModel> mModel;
+    Glib::RefPtr<GUI::FBTreeFilter> mFilter;
 
     void initialize();
 };

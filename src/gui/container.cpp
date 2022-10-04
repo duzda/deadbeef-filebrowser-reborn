@@ -1,29 +1,32 @@
 #include "container.hpp"
 
+#include "fbtreemodel.hpp"
+#include "fbtreefilter.hpp"
 #include "settings.hpp"
 #include "plugin.hpp"
 #include "filebrowser.hpp"
 #include "utils.hpp"
 
+using namespace GUI;
+
 Container::Container() :
     mAddressbox(),
     mScrolledWindow()
 {
-    this->mFilebrowserModel = FilebrowserModel::create();
-    mFilebrowserModel->setIconSize(deadbeef->conf_get_int(FBR_ICON_SIZE, 32));
+    this->mModel = FBTreeModel::create();
+    mModel->setIconSize(deadbeef->conf_get_int(FBR_ICON_SIZE, 32));
 
-    this->mFilebrowserFilter = FilebrowserFilter::create(mFilebrowserModel);
-    this->mFilebrowserFilter->setModel(mFilebrowserModel.get());
-    this->mSearchbar.setTreeModelFilter(this->mFilebrowserFilter.get());
-    this->mAddressbox.initialize(&mTreeView, mFilebrowserFilter, this->mFilebrowserModel.get());
+    this->mFilter = FBTreeFilter::create(mModel);
+    this->mSearchbar.setTreeFilter(mFilter.get());
+    this->mBridge.initialize(&mAddressbox, &mView, mModel.get());
+    this->mAddressbox.initialize(&mBridge, &mView, mFilter.get(), mModel.get());
 
-    this->mTreeView.set_model(mFilebrowserFilter);
-    this->mTreeView.initialize(mFilebrowserModel.get());
-    this->mFilebrowserModel->initialize(&this->mTreeView, &this->mAddressbox);
-    this->mTreePopup.initialize(&this->mTreeView, this->mFilebrowserModel.get(), this->mFilebrowserFilter.get(), &this->mAddressbox);
+    this->mView.initialize(mModel.get(), mFilter);
+    this->mModel->initialize(&mBridge, &mView);
+    this->mTreePopup.initialize(&mView, mModel.get(), mFilter.get(), &mAddressbox);
 
     this->mScrolledWindow.set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
-    this->mScrolledWindow.add(mTreeView);
+    this->mScrolledWindow.add(mView);
 
     this->pack_start(mSearchbar, false, true);
     this->pack_start(mAddressbox, false, true);

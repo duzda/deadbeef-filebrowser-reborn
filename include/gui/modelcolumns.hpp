@@ -2,12 +2,15 @@
 
 #include <gtkmm.h>
 
-class ModelColumns : public Gtk::TreeModel::ColumnRecord {
+#include "gui.hpp"
+
+class GUI::ModelColumns : public Gtk::TreeModel::ColumnRecord {
 public:
     ModelColumns();
-    Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> mColumnIcon;
-    Gtk::TreeModelColumn<std::string> mColumnName;
-    Gtk::TreeModelColumn<std::string> mColumnURI;
-    Gtk::TreeModelColumn<std::string> mColumnTooltip;
-    Gtk::TreeModelColumn<bool> mColumnVisibility;
+
+    Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> ColumnIcon;
+    Gtk::TreeModelColumn<std::string> ColumnName;
+    Gtk::TreeModelColumn<std::string> ColumnURI;
+    Gtk::TreeModelColumn<std::string> ColumnTooltip;
+    Gtk::TreeModelColumn<bool> ColumnVisibility;
 };

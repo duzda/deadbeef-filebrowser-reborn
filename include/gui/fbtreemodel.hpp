@@ -6,20 +6,19 @@
 #include <atomic>
 #include <memory>
 
+#include "gui.hpp"
 #include "modelcolumns.hpp"
-
-class Addressbox;
 
 /**
  * Extends Gtk::TreeStore, container for all the data, see ModelColumns for used columns.
  */
-class FilebrowserModel : public Gtk::TreeStore {
+class GUI::FBTreeModel : public Gtk::TreeStore {
 public:
-    ModelColumns mModelColumns;
-    static Glib::RefPtr<FilebrowserModel> create();
-    void setNeedleState(bool newState);
-    void initialize(Gtk::TreeView* treeview, Addressbox* addressbox);
-    void setIconSize(uint newValue);
+    GUI::ModelColumns ModelColumns;
+    static Glib::RefPtr<GUI::FBTreeModel> create();
+    void setNeedleState(bool state);
+    void initialize(GUI::DispatcherBridge* bridge, GUI::FBTreeView* view);
+    void setIconSize(uint size);
 
     /**
      * Returns approximate progress of reading directory tree.
@@ -49,19 +48,18 @@ public:
     void stopThread();
 
 private:
-    FilebrowserModel();
-    ~FilebrowserModel();
+    FBTreeModel();
+    ~FBTreeModel();
 
     std::filesystem::path mTreeDirectory;
-    Gtk::TreeView* mTreeView;
-    Addressbox* mAddressbox;
+    GUI::FBTreeView* mView;
+    GUI::DispatcherBridge* mBridge;
 
     uint mIconSize = 32;
 
     bool mIsNeedleSet = false;
 
     bool mRefreshLock = false;
-
     std::thread* mRefreshThread;
     std::atomic<float> mThreadProgress = 0;
     std::atomic<bool> mRefreshThreadRunning = true;

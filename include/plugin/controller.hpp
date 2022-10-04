@@ -17,7 +17,7 @@ public:
     static int guiPluginDisconnect();
 private:
     static ddb_gtkui_t* gtkui_plugin;
-    static Container* container;
+    static GUI::Container* container;
 
     Controller();
     ~Controller();

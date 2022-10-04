@@ -2,48 +2,31 @@
 
 #include <gtkmm.h>
 
-#include "filebrowsermodel.hpp"
-#include "filebrowserfilter.hpp"
+#include "gui.hpp"
 
 /**
  * Extends Gtk::HBox, contains address bar and Go! button.
  * Styling happends in the constructor.
  */
-class Addressbox : public Gtk::HBox
+class GUI::Addressbox : public Gtk::HBox
 {
 public:
-    void initialize(Gtk::TreeView* treeview, Glib::RefPtr<FilebrowserFilter> filter, FilebrowserModel* treefb);
-    void setAddress(std::string newAddres);
-    std::string getAddress();
-
-    /**
-     * Notifies dispatcher.
-     */
-    void notify();
-
     Addressbox();
     ~Addressbox();
+
+    void initialize(GUI::DispatcherBridge* bridge, GUI::FBTreeView* view, FBTreeFilter* filter, FBTreeModel* model);
+    void setAddress(std::string addres);
+    std::string getAddress();
+
+    void setProgress(float progress);
+    void setState(bool running);
 private:
     Gtk::Button mGoButton;
     Gtk::Entry mAddressBar;
-    FilebrowserModel* mFilebrowserModel;
-    Gtk::TreeView* mTreeView;
-    Glib::RefPtr<FilebrowserFilter> mFilebrowserFilter;
-    std::string mAddress;
-
-    bool mInProgress = false;
-    Glib::Dispatcher mDispatcher;
-
-    /**
-     * Dispatcher event.
-     */
-    void onNotify();
-
-    /**
-     * Changes button according to progress, updates progress bar, 
-     * this is just a wild guess, and progress gets counted only by the root folders.
-     */
-    void updateProgressState();
+    GUI::FBTreeModel* mModel;
+    GUI::FBTreeView* mView;
+    GUI::FBTreeFilter* mFilter;
+    GUI::DispatcherBridge* mBridge;
 
     /**
      * Gets called when pressing the search button
