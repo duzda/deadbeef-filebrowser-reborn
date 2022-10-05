@@ -6,7 +6,7 @@
 #include "cache.hpp"
 #include "cover.hpp"
 
-class Cache::Covers::MetadataFirst : Cache::Covers::Cover {
+class Cache::Covers::MetadataFirst : public Cache::Covers::Cover {
 public:
     MetadataFirst();
     ~MetadataFirst();
