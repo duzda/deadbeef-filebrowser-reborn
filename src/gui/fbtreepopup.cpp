@@ -81,6 +81,7 @@ void FBTreePopup::threadedAddToPlaylist(void* ctx) {
 void FBTreePopup::addToPlaylist(std::vector<std::string> uris, std::string address, bool replace) {
     ddb_playlist_t* plt = deadbeef->plt_get_curr();
 
+    int itemCount = deadbeef->plt_get_item_count(plt, PL_MAIN);
     if (replace) {
         deadbeef->plt_select_all(plt);
         deadbeef->plt_delete_selected(plt);
@@ -100,16 +101,24 @@ void FBTreePopup::addToPlaylist(std::vector<std::string> uris, std::string addre
         deadbeef->plt_add_files_end(plt, 0);
         deadbeef->plt_modified(plt);
         deadbeef->plt_save_config(plt);
-        deadbeef->conf_save();
     }
 
     if (replace) {
         deadbeef->sendmessage(DB_EV_PLAY_NUM, 0, 0, 0);
     } else {
-        if (deadbeef->playback_get_pos() == 0.0) {
-            deadbeef->sendmessage(DB_EV_NEXT, 0, 0, 0);
+        auto current = deadbeef->streamer_get_playing_track();
+        if (!current) {
+            if (itemCount == 0) {
+                deadbeef->sendmessage(DB_EV_PLAY_NUM, 0, 0, 0);
+            } else {
+                if (deadbeef->plt_get_item_count(plt, PL_MAIN) > itemCount) {
+                    deadbeef->sendmessage(DB_EV_PLAY_NUM, 0, itemCount, 0);
+                }
+            }
         }
     }
+
+    deadbeef->plt_unref(plt);
 }
 
 void FBTreePopup::popup_open_folder() {
