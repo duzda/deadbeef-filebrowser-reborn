@@ -32,13 +32,6 @@ Container::Container() :
     this->pack_start(mAddressbox, false, true);
     this->pack_start(mScrolledWindow, true, true);
 
-    this->initialize();
-}
-
-void Container::initialize() {
-    // Create autofilter
-    Filebrowser::VALID_EXTENSIONS = Utils::createValidExtensions();
-    std::string defaultDir = Glib::get_user_special_dir(Glib::UserDirectory::USER_DIRECTORY_MUSIC);
     mAddressbox.setAddress(Settings::getInstance().getDefaultPath());
 }
 

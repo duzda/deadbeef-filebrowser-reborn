@@ -6,6 +6,7 @@
 #define FBR_ALBUM_ALGORITHM "filebrowser_reborn.album_algorithm"
 
 #include <string>
+#include <vector>
 
 class Settings {
 public:
@@ -17,6 +18,8 @@ public:
     int getIconSize();
     int getDoubleclickReplace();
     int getAlbumAlgorithm();
+
+    std::vector<std::string> getValidExtensions();
 private:
     Settings();
 
@@ -32,4 +35,6 @@ private:
     int iconSize;
     int doubleclickReplace;
     int albumAlgorithm;
+
+    std::vector<std::string> validExtensions;
 };

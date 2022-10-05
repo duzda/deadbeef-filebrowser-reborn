@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-std::vector<std::string> Filebrowser::VALID_EXTENSIONS = std::vector<std::string>();
+#include "settings.hpp"
 
 std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(std::filesystem::path path, bool sort, bool showHiddenFiles) {
     std::vector<std::filesystem::directory_entry> files = {};
@@ -31,7 +31,7 @@ std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(std::file
 
         // Check file extension
         bool validFile = false;
-        for (auto &extension : Filebrowser::VALID_EXTENSIONS) {
+        for (auto &extension : Settings::getInstance().getValidExtensions()) {
             if (entry.path().extension() == extension) {
                 validFile = true;
                 break;

@@ -5,6 +5,7 @@
 
 Settings::Settings() {
     this->update();
+    this->validExtensions = Utils::createValidExtensions();
 }
 
 Settings& Settings::getInstance() {
@@ -24,7 +25,7 @@ void Settings::onUpdate() {
 
 void Settings::update() {
     deadbeef->conf_lock();
-    this->defaultPath = deadbeef->conf_get_str_fast(FBR_DEFAULT_PATH, "");
+    this->defaultPath = deadbeef->conf_get_str_fast(FBR_DEFAULT_PATH, Glib::get_user_special_dir(Glib::UserDirectory::USER_DIRECTORY_MUSIC).c_str());
     deadbeef->conf_unlock();
 
     this->iconSize = deadbeef->conf_get_int(FBR_ICON_SIZE, 32);
@@ -46,4 +47,8 @@ int Settings::getDoubleclickReplace() {
 
 int Settings::getAlbumAlgorithm() {
     return this->albumAlgorithm;
+}
+
+std::vector<std::string> Settings::getValidExtensions() {
+    return this->validExtensions;
 }

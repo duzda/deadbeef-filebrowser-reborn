@@ -25,12 +25,6 @@ public:
      * @return True if directory contains file, false otherwise.
      */
     static bool hasFile(std::filesystem::path directory, std::vector<std::string> acceptedFiles, std::string* outputFile);
-
-    /**
-     * Only files with these extensions get showed.
-     * Probably should be filled by Utils::createValidExtensions().
-     */
-    static std::vector<std::string> VALID_EXTENSIONS;
 private:
     Filebrowser();
     virtual ~Filebrowser();

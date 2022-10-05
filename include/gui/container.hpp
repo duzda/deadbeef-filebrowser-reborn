@@ -25,6 +25,4 @@ private:
     Gtk::ScrolledWindow mScrolledWindow;
     Glib::RefPtr<GUI::FBTreeModel> mModel;
     Glib::RefPtr<GUI::FBTreeFilter> mFilter;
-
-    void initialize();
 };
