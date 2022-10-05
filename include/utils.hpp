@@ -62,6 +62,8 @@ public:
      * @return Path to the cache file
      */
     static std::filesystem::path createCachePath(std::filesystem::path path, uint size);
+
+    static void clearCache();
 private:
     Utils();
     ~Utils();

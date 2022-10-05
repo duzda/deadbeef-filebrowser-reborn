@@ -14,7 +14,7 @@ Container::Container() :
     mScrolledWindow()
 {
     this->mModel = FBTreeModel::create();
-    mModel->setIconSize(deadbeef->conf_get_int(FBR_ICON_SIZE, 32));
+    mModel->setIconSize(Settings::getInstance().getIconSize());
 
     this->mFilter = FBTreeFilter::create(mModel);
     this->mSearchbar.setTreeFilter(mFilter.get());
@@ -39,12 +39,7 @@ void Container::initialize() {
     // Create autofilter
     Filebrowser::VALID_EXTENSIONS = Utils::createValidExtensions();
     std::string defaultDir = Glib::get_user_special_dir(Glib::UserDirectory::USER_DIRECTORY_MUSIC);
-
-    // Set addressbar
-    deadbeef->conf_lock();
-    auto address = deadbeef->conf_get_str_fast(FBR_DEFAULT_PATH, defaultDir.c_str());
-    deadbeef->conf_unlock();
-    mAddressbox.setAddress(address);
+    mAddressbox.setAddress(Settings::getInstance().getDefaultPath());
 }
 
 Container::~Container() {

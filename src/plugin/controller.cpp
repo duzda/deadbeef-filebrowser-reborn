@@ -43,3 +43,11 @@ int Controller::guiPluginDisconnect() {
 
     return 0;
 }
+
+int Controller::handleEvent(uint32_t id, uintptr_t ctx, uint32_t p1, uint32_t p2) {
+    if (id == DB_EV_CONFIGCHANGED) {
+        Settings::getInstance().onUpdate();
+    }
+
+    return 0;
+}

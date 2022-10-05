@@ -8,6 +8,7 @@ static DB_misc_t plugin;
 const char config_dialog[] =
 "property \"Icon size: \" spinbtn[24,48,2] " FBR_ICON_SIZE " \"32\" ;\n"
 "property \"Doubleclick replace playlist content \" checkbox " FBR_DOUBLECLICK_REPLACE " \"0\" ;\n"
+"property \"Album icon algorithm: \" select[2] " FBR_ALBUM_ALGORITHM " \"0\" \"Cover first\" \"Metadata first\";\n"
 ;
 
 extern "C" 
@@ -28,6 +29,7 @@ DB_plugin_t* ddb_misc_filebrowser_reborn_load(DB_functions_t* api) {
     plugin.plugin.disconnect = &Controller::pluginDisconnect;
     plugin.plugin.flags = DDB_PLUGIN_FLAG_LOGGING;
     plugin.plugin.configdialog = config_dialog;
+    plugin.plugin.message = &Controller::handleEvent;
 
     return DB_PLUGIN(&plugin.plugin);
 }

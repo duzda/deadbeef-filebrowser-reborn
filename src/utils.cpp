@@ -5,13 +5,15 @@
 #include "filebrowser.hpp"
 #include "plugin.hpp"
 #include "settings.hpp"
-#include "coverfirst.hpp"
+#include "coverfactory.hpp"
+#include "cover.hpp"
 
 Glib::RefPtr<Gdk::Pixbuf> Utils::getIcon(std::filesystem::path path, uint size) {
     Glib::RefPtr<Gdk::Pixbuf> icon;
 
-    Cache::Covers::CoverFirst coverfirst;
-    icon = coverfirst.getIcon(path, size);
+    int algorithm = Settings::getInstance().getAlbumAlgorithm();
+    auto coverRetriever = Cache::Covers::CoverFactory::getCoverAlgorithm(algorithm);
+    icon = coverRetriever->getIcon(path, size);
 
     return icon;
 }
@@ -69,4 +71,13 @@ std::filesystem::path Utils::createCachePath(std::filesystem::path path, uint si
     cache += std::to_string(std::hash<std::string>{}(path.string()));
 
     return cache;
+}
+
+void Utils::clearCache() {
+    std::string cache = deadbeef->get_system_dir(DDB_SYS_DIR_CACHE);
+    cache += "/" + APP_NAME;
+
+    if (std::filesystem::exists(cache)) {
+        std::filesystem::remove_all(cache);
+    }
 }
