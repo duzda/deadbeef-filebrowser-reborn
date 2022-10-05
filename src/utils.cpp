@@ -60,7 +60,7 @@ std::vector<std::string> Utils::createValidExtensions() {
 
 std::filesystem::path Utils::createCachePath(std::filesystem::path path, uint size) {
     std::string cache = deadbeef->get_system_dir(DDB_SYS_DIR_CACHE);
-    cache += "/filebrowser/icons/" + std::to_string(size) + std::string("/");
+    cache += "/" + APP_NAME + "/icons/" + std::to_string(size) + "/";
 
     if (!std::filesystem::exists(cache)) {
         std::filesystem::create_directories(cache);

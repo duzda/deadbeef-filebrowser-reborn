@@ -65,4 +65,6 @@ public:
 private:
     Utils();
     ~Utils();
+
+    inline static const std::string APP_NAME = "filebrowser";
 };
