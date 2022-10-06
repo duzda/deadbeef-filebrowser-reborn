@@ -18,7 +18,6 @@ public:
     static Glib::RefPtr<GUI::FBTreeModel> create();
     void setNeedleState(bool state);
     void initialize(GUI::DispatcherBridge* bridge, GUI::FBTreeView* view);
-    void setIconSize(uint size);
 
     /**
      * Returns approximate progress of reading directory tree.
@@ -54,8 +53,6 @@ private:
     std::filesystem::path mTreeDirectory;
     GUI::FBTreeView* mView;
     GUI::DispatcherBridge* mBridge;
-
-    uint mIconSize = 32;
 
     bool mIsNeedleSet = false;
 

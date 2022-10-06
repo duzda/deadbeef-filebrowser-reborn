@@ -8,6 +8,7 @@
 #include "utils.hpp"
 #include "plugin.hpp"
 #include "addressbox.hpp"
+#include "settings.hpp"
 
 using namespace GUI;
 
@@ -26,10 +27,6 @@ void FBTreeModel::setNeedleState(bool newState) {
 void FBTreeModel::initialize(DispatcherBridge* bridge, FBTreeView* view) {
     this->mBridge = bridge;
     this->mView = view;
-}
-
-void FBTreeModel::setIconSize(uint newIconSize) {
-    this->mIconSize = newIconSize;
 }
 
 float FBTreeModel::getProgress() {
@@ -94,7 +91,7 @@ void FBTreeModel::stopThread() {
 }
 
 void FBTreeModel::fillRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent) {
-    Glib::RefPtr<Gdk::Pixbuf> icon = Utils::getIcon(entry, mIconSize);
+    Glib::RefPtr<Gdk::Pixbuf> icon = Utils::getIcon(entry, Settings::getInstance().getIconSize());
     Gtk::TreeModel::iterator iter;
     if (parent) {
         iter = append((*parent));

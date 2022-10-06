@@ -14,8 +14,6 @@ Container::Container() :
     mScrolledWindow()
 {
     this->mModel = FBTreeModel::create();
-    mModel->setIconSize(Settings::getInstance().getIconSize());
-
     this->mFilter = FBTreeFilter::create(mModel);
     this->mSearchbar.setTreeFilter(mFilter.get());
     this->mBridge.initialize(&mAddressbox, &mView, mModel.get());
