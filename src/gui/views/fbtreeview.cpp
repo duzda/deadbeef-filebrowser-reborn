@@ -29,8 +29,6 @@ void FBTreeView::initialize(FBTreeModel* model, Glib::RefPtr<FBTreeFilter> filte
     this->get_selection()->set_mode(Gtk::SelectionMode::SELECTION_MULTIPLE);
     this->set_has_tooltip(true);
     this->set_tooltip_column(3);
-
-    this->setModel();
 }
 
 void FBTreeView::setModel() {
