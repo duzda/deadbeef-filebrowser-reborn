@@ -7,6 +7,7 @@
 #include "addressbox.hpp"
 #include "plugin.hpp"
 #include "settings.hpp"
+#include "controller.hpp"
 
 using namespace GUI;
 
@@ -45,6 +46,9 @@ void FBTreePopup::initialize(FBTreeView* view, FBTreeModel* model, FBTreeFilter*
 }
 
 bool FBTreePopup::on_click(GdkEventButton* event) {
+    if (Controller::gtkui_plugin->w_get_design_mode()) {
+        return false;
+    }
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         this->popup_at_pointer(NULL);
     } else if (event->type == GDK_2BUTTON_PRESS && event->button == 1) {

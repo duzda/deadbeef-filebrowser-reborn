@@ -16,8 +16,9 @@ public:
     static ddb_gtkui_widget_t* guiPluginConnect();
     static int guiPluginDisconnect();
     static int handleEvent(uint32_t id, uintptr_t ctx, uint32_t p1, uint32_t p2);
-private:
+
     static ddb_gtkui_t* gtkui_plugin;
+private:
     static GUI::Container* container;
 
     Controller();
