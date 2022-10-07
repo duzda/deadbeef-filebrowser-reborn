@@ -8,10 +8,16 @@
 #include <string>
 #include <vector>
 
+/**
+ * Should be used for settings retrieval, for writing into settings, use deadbeef->conf_set_int etc.
+ */
 class Settings {
 public:
     static Settings& getInstance();
 
+    /**
+     * Should be used as a callback to the changing of settings.
+     */
     void onUpdate();
 
     std::string getDefaultPath();

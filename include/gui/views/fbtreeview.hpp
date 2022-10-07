@@ -14,6 +14,9 @@ public:
 
     void initialize(GUI::FBTreeModel* model, Glib::RefPtr<GUI::FBTreeFilter> filter);
 
+    /**
+     * Use this instead of set_model.
+     */
     void setModel();
 
     /**

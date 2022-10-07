@@ -18,7 +18,18 @@ public:
     void setAddress(std::string addres);
     std::string getAddress();
 
+    /**
+     * Changes progress of the action of Addressbox.
+     * 
+     * @param progress 0 - 1, where 1 is finished.
+     */
     void setProgress(float progress);
+
+    /**
+     * Changes Addressbox sensitivity and icon.
+     * 
+     * @param running 
+     */
     void setState(bool running);
 private:
     Gtk::Button mGoButton;
@@ -29,12 +40,12 @@ private:
     GUI::DispatcherBridge* mBridge;
 
     /**
-     * Gets called when pressing the search button
+     * Gets called when pressing the search button.
      */
     void on_go_button_click();
 
     /**
-     * Makes path valid (removes trailing /)
+     * Makes path valid (removes trailing /).
      * 
      * @param path String we need to correct.
      * 

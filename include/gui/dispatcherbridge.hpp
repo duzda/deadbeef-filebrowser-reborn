@@ -4,6 +4,9 @@
 
 #include "gui.hpp"
 
+/**
+ * Creates bridge just for the dispatcher between Addressbox and FBTreeModel.
+ */
 class GUI::DispatcherBridge {
 public:
     DispatcherBridge();
