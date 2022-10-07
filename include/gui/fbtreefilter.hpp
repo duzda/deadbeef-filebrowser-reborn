@@ -15,7 +15,6 @@ public:
 
     static Glib::RefPtr<GUI::FBTreeFilter> create(Glib::RefPtr<GUI::FBTreeModel> model);
     void setNeedle(std::string needle);
-    void setModel(GUI::FBTreeModel* model);
 private:
     std::string mNeedle;
     GUI::FBTreeModel* mModel;
