@@ -47,10 +47,17 @@ includes = [
     include_directories('../include/metadata/implementation'),
 ]
 
+version = meson.project_version()
+version = version.split('.')
+
 lib = shared_library(
     'ddb_misc_filebrowser_reborn',
     include_directories: includes,
     dependencies: dependencies,
     install: true,
     sources: source_files,
+    cpp_args: [
+        '-DVMAJOR=@0@'.format(version[0]), 
+        '-DVMINOR=@0@'.format(version[1]),
+    ]
 )

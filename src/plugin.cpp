@@ -2,6 +2,14 @@
 #include "controller.hpp"
 #include "settings.hpp"
 
+#ifndef VMAJOR
+    #define VMAJOR 0
+#endif // VMAJOR
+
+#ifndef VMINOR
+    #define VMINOR 0
+#endif // VMINOR
+
 DB_functions_t* deadbeef = NULL;
 static DB_misc_t plugin;
 
@@ -18,8 +26,8 @@ DB_plugin_t* ddb_misc_filebrowser_reborn_load(DB_functions_t* api) {
     plugin.plugin.type = DB_PLUGIN_MISC;
     plugin.plugin.api_vmajor = 1;
     plugin.plugin.api_vminor = 15;
-    plugin.plugin.version_major = 0;
-    plugin.plugin.version_minor = 1;
+    plugin.plugin.version_major = VMAJOR;
+    plugin.plugin.version_minor = VMINOR;
     plugin.plugin.id = "filebrowser-reborn";
     plugin.plugin.name = "File Browser Reborn";
     plugin.plugin.descr = "Simple file browser, based on http://sourceforge.net/projects/deadbeef-fb";
