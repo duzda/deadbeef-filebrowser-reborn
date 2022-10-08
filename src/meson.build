@@ -1,6 +1,6 @@
 dependencies = [
     dependency('gtkmm-3.0'),
-    dependency('taglib')
+    dependency('taglib'),
 ]
 
 # Apparently deadbeef can't be found with pkg-conf
