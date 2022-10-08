@@ -1,0 +1,55 @@
+name: Create draft
+
+on: workflow_dispatch
+
+permissions:
+  contents: write
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Download deadbeef libs
+        run: wget https://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download
+
+      - name: Extract deadbeef libs
+        run: sudo tar -xf download -C /usr/include
+
+      - name: Update environment
+        run: sudo apt update
+
+      - name: Install tools
+        run: sudo apt install libtag1-dev libboost-all-dev libgtkmm-3.0-dev ninja-build meson gcc
+
+      - name: Create build folder
+        run: meson build --buildtype release
+
+      - name: Compile
+        run: ninja -C build
+
+      - name: Rename
+        run: mv "./build/src/libddb_misc_filebrowser_reborn.so" "./build/src/ddb_misc_filebrowser_reborn.so"
+
+      - name: Dump version to file
+        run: meson introspect meson.build --projectinfo >> info.json
+
+      - name: Get version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+          path: 'info.json'
+          prop_path: 'version'
+
+      - name: Create draft
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          prerelease: false
+          tag_name: v${{ steps.version.outputs.prop }}
+          body: "Changelog: \n- "
+          files: |
+            ./build/src/ddb_misc_filebrowser_reborn.so

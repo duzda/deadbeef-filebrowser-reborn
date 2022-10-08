@@ -1,0 +1,28 @@
+name: Build
+
+on: [push, pull_request, workflow_call]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Download deadbeef libs
+        run: wget https://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download
+
+      - name: Extract deadbeef libs
+        run: sudo tar -xf download -C /usr/include
+
+      - name: Update environment
+        run: sudo apt update
+
+      - name: Install tools
+        run: sudo apt install libtag1-dev libboost-all-dev libgtkmm-3.0-dev ninja-build meson gcc
+
+      - name: Create build folder
+        run: meson build
+
+      - name: Compile
+        run: ninja -C build

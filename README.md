@@ -24,7 +24,11 @@ then you should be able to create a new widget called 'File Browser' via design 
 
 On Arch Linux:
 
-``` pacman -S boost-libs gtkmm3 ninja meson gcc ```
+``` pacman -S taglib boost-libs gtkmm3 ninja meson gcc ```
+
+On Ubuntu:
+
+``` apt install libtag1-dev libboost-all-dev libgtkmm-3.0-dev ninja-build meson gcc ```
 
 And then compile the project:
 

@@ -1,6 +1,7 @@
 dependencies = [
     dependency('gtkmm-3.0'),
     dependency('taglib'),
+    dependency('threads'),
 ]
 
 # Apparently deadbeef can't be found with pkg-conf
@@ -59,5 +60,5 @@ lib = shared_library(
     cpp_args: [
         '-DVMAJOR=@0@'.format(version[0]), 
         '-DVMINOR=@0@'.format(version[1]),
-    ]
+    ],
 )
