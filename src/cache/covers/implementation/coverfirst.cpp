@@ -4,8 +4,6 @@
 #include "utils.hpp"
 #include "filebrowser.hpp"
 
-#include "iostream"
-
 using namespace Cache::Covers;
 
 CoverFirst::CoverFirst() {
