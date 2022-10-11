@@ -26,7 +26,7 @@ Glib::RefPtr<Gdk::Pixbuf> CoverFirst::getIcon(std::filesystem::path path, uint s
                 std::string outputName;
                 if (Filebrowser::hasFile(path, SUPPORTED_COVERS, &outputName)) {
                     icon = Gdk::Pixbuf::create_from_file(outputName, -1, size, true);
-                    icon->save(currentPath, "png");
+                    icon->save(currentPath, "bmp");
 
                     lastDirectory = path;
                     lastIcon = icon;
@@ -37,7 +37,7 @@ Glib::RefPtr<Gdk::Pixbuf> CoverFirst::getIcon(std::filesystem::path path, uint s
                 bool useCache = false;
                 icon = ReaderFactory::getImage(path, size, &useCache);
                 if (useCache) {
-                    icon->save(currentPath, "png");
+                    icon->save(currentPath, "bmp");
                 }
             }
         } else {
