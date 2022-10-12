@@ -13,4 +13,6 @@ public:
 
     Glib::RefPtr<Gdk::Pixbuf> getIcon(std::filesystem::path path, uint size);
 private:
+    bool isNotChild(std::filesystem::path parent, std::filesystem::path child);
+    Glib::RefPtr<Gdk::Pixbuf> hasChildrenIcon(std::filesystem::path cachePath, std::filesystem::path path, uint size);
 };
