@@ -75,8 +75,8 @@ Glib::RefPtr<Gdk::Pixbuf> MetadataFirst::hasChildrenIcon(std::filesystem::path c
             auto icon = ReaderFactory::getImage(entry, size, &useCache);
             if (useCache) {
                 icon->save(cachePath, "bmp");
+                return icon;
             }
-            return icon;
         }
     }
 
