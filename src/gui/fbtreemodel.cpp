@@ -52,7 +52,7 @@ void FBTreeModel::refreshTree() {
 
 void FBTreeModel::refreshThread() {
     this->clear();
-    pluginLog(DDB_LOG_LAYER_INFO, "Loading tree structure");
+    pluginLog(LogLevel::Info, "Loading tree structure");
     auto filelist = Filebrowser::getFileList(mTreeDirectory, true, false);
     float progressTotal = filelist.size();
     float progressIteration = 0;
@@ -60,7 +60,7 @@ void FBTreeModel::refreshThread() {
     if (progressTotal > 0) {
         for (auto &entry : filelist) {
             if (!this->mRefreshThreadRunning.load()) {
-                pluginLog(DDB_LOG_LAYER_INFO, "Load canceled by user");
+                pluginLog(LogLevel::Info, "Load canceled by user");
                 this->mThreadProgress = 1;
                 this->mBridge->notify();
                 this->mRefreshLock = false;
@@ -74,9 +74,9 @@ void FBTreeModel::refreshThread() {
     } else {
         this->fillEmptyRow();
     }
-    pluginLog(DDB_LOG_LAYER_INFO, "Structure loaded");
+    pluginLog(LogLevel::Info, "Structure loaded");
     this->mRefreshLock = false;
-    pluginLog(DDB_LOG_LAYER_INFO, "Notifying dispatcher - task done");
+    pluginLog(LogLevel::Info, "Notifying dispatcher - task done");
     this->mThreadProgress = 1;
     this->mBridge->notify();
 }
@@ -116,7 +116,7 @@ void FBTreeModel::fillChildrenRow(std::filesystem::directory_entry entry, const 
     if (count > 0) {
         for (auto &entry : filelist) {
             if (!mRefreshThreadRunning.load()) {
-                pluginLog(DDB_LOG_LAYER_INFO, "Child load canceled by user");
+                pluginLog(LogLevel::Info, "Child load canceled by user");
                 return;
             }
             this->fillRow(entry, parent);

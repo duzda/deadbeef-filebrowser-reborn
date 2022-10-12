@@ -42,6 +42,21 @@ DB_plugin_t* ddb_misc_filebrowser_reborn_load(DB_functions_t* api) {
     return DB_PLUGIN(&plugin.plugin);
 }
 
-void pluginLog(int level, std::string message) {
-    deadbeef->log_detailed(&plugin.plugin, level, (message + "\n").c_str());
+void pluginLog(LogLevel level, std::string message) {
+    std::string levelString = "UNKNOWN";
+
+    switch (level) {
+        case LogLevel::Info:
+            levelString = "INFO";
+            break;
+        case LogLevel::Warning:
+            levelString = "WARNING";
+            break;
+        case LogLevel::Error:
+            levelString = "ERROR";
+            break;
+    }
+
+    std::string logMessage = "[Filebrowser Reborn] " + levelString + " - " + message + "\n";
+    deadbeef->log_detailed(&plugin.plugin, level, logMessage.c_str());
 }

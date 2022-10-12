@@ -10,7 +10,7 @@ Glib::RefPtr<Gdk::Pixbuf> Reader::getImageFromData(TagLib::ByteVector bytes, int
         loader->close();
         return loader->get_pixbuf();
     } catch (Glib::Error &e) {
-        pluginLog(DDB_LOG_LAYER_INFO, ("Error while loading cover from metadata: " + e.what()));
+        pluginLog(LogLevel::Warning, ("Error while loading cover from metadata: " + e.what()));
     }
 
     // Return nullptr

@@ -50,7 +50,7 @@ void Addressbox::setState(bool running) {
 
 void Addressbox::on_go_button_click() {
     if (mBridge->inProgress()) {
-        pluginLog(DDB_LOG_LAYER_INFO, "Still in progress");
+        pluginLog(LogLevel::Info, "Still in progress");
         this->mModel->stopThread();
         return;
     }
