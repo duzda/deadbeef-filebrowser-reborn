@@ -15,6 +15,7 @@ source_files = files(
     'cache/covers/coverfactory.cpp',
     'cache/covers/implementation/coverfirst.cpp',
     'cache/covers/implementation/metadatafirst.cpp',
+    'cache/covers/implementation/metadataonly.cpp',
     'gui/dispatcherbridge.cpp',
     'gui/modelcolumns.cpp',
     'gui/container.cpp',

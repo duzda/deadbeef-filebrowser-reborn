@@ -16,7 +16,7 @@ static DB_misc_t plugin;
 const char config_dialog[] =
 "property \"Icon size: \" spinbtn[24,48,2] " FBR_ICON_SIZE " \"32\" ;\n"
 "property \"Doubleclick replace playlist content \" checkbox " FBR_DOUBLECLICK_REPLACE " \"0\" ;\n"
-"property \"Album icon algorithm: \" select[2] " FBR_ALBUM_ALGORITHM " \"0\" \"Cover first\" \"Metadata first\";\n"
+"property \"Album icon algorithm: \" select[3] " FBR_ALBUM_ALGORITHM " \"0\" \"Cover first\" \"Metadata first\" \"Metadata only\";\n"
 ;
 
 extern "C" 
