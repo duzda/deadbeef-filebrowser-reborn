@@ -30,12 +30,12 @@ void DispatcherBridge::onNotify() {
 }
 
 void DispatcherBridge::updateProgressState() {
-    float progress = mModel->getProgress();
+    double progress = mModel->getProgress();
     if (progress == 1) {
         pluginLog(LogLevel::Info, "Thread reported progress done");
         this->mInProgress = false;
         this->mAddressbox->setState(true);
-        this->mAddressbox->setProgress(0);
+        this->mAddressbox->setProgress(0.0);
         this->mView->setModel();
     } else {
         if (!this->mInProgress) {

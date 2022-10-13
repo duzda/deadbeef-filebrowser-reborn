@@ -39,8 +39,10 @@ std::string Addressbox::getAddress() {
     return this->mAddressBar.get_text();
 }
 
-void Addressbox::setProgress(float progress) {
-    this->mAddressBar.set_progress_fraction(progress);
+void Addressbox::setProgress(double progress) {
+    if (this->mAddressBar.get_progress_fraction() != progress) {
+        this->mAddressBar.set_progress_fraction(progress);
+    }
 }
 
 void Addressbox::setState(bool running) {

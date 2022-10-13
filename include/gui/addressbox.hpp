@@ -23,7 +23,7 @@ public:
      * 
      * @param progress 0 - 1, where 1 is finished.
      */
-    void setProgress(float progress);
+    void setProgress(double progress);
 
     /**
      * Changes Addressbox sensitivity and icon.

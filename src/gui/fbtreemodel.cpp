@@ -29,8 +29,8 @@ void FBTreeModel::initialize(DispatcherBridge* bridge, FBTreeView* view) {
     this->mView = view;
 }
 
-float FBTreeModel::getProgress() {
-    return (this->mRefreshLock ? (float)this->mThreadProgress : 1);
+double FBTreeModel::getProgress() {
+    return (this->mRefreshLock ? (double)this->mThreadProgress : 1);
 }
 
 void FBTreeModel::setTreeRoot(std::filesystem::path newDirectory) {

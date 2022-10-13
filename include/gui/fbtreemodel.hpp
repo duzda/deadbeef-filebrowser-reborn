@@ -24,7 +24,7 @@ public:
      * 
      * @return Float between 0 and 1, 1 when finished
      */
-    float getProgress();
+    double getProgress();
 
     /**
      * Sets new root directory and refreshes tree.
@@ -58,7 +58,7 @@ private:
 
     bool mRefreshLock = false;
     std::thread* mRefreshThread;
-    std::atomic<float> mThreadProgress = 0;
+    std::atomic<double> mThreadProgress = 0;
     std::atomic<bool> mRefreshThreadRunning = true;
 
     /**
