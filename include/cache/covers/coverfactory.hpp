@@ -1,3 +1,5 @@
+#pragma once
+
 #include "cache.hpp"
 
 class Cache::Covers::CoverFactory {
