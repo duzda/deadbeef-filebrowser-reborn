@@ -15,7 +15,7 @@ Container::Container() :
 {
     this->mModel = FBTreeModel::create();
     this->mFilter = FBTreeFilter::create(mModel);
-    this->mSearchbar.setTreeFilter(mFilter.get());
+    this->mSearchbar.initialize(mFilter.get());
     this->mBridge.initialize(&mAddressbox, &mSearchbar, &mView, mModel.get());
     this->mAddressbox.initialize(&mBridge, &mView, mFilter.get(), mModel.get());
 

@@ -12,7 +12,7 @@ public:
     Searchbar();
     ~Searchbar();
 
-    void setTreeFilter(GUI::FBTreeFilter* filter);
+    void initialize(GUI::FBTreeFilter* filter);
 private:
     GUI::FBTreeFilter* mFilter;
     sigc::connection mTimer;

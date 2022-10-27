@@ -11,7 +11,7 @@ Searchbar::Searchbar() {
     this->set_sensitive(false);
 }
 
-void Searchbar::setTreeFilter(FBTreeFilter* filter) {
+void Searchbar::initialize(FBTreeFilter* filter) {
     this->mFilter = filter;
     this->signal_changed().connect(sigc::mem_fun(this, &Searchbar::on_change));
 }
