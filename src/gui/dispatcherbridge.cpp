@@ -1,6 +1,7 @@
 #include "dispatcherbridge.hpp"
 
 #include "addressbox.hpp"
+#include "searchbar.hpp"
 #include "fbtreeview.hpp"
 #include "fbtreemodel.hpp"
 #include "plugin.hpp"
@@ -11,14 +12,22 @@ DispatcherBridge::DispatcherBridge() {
     mDispatcher.connect(sigc::mem_fun(*this, &DispatcherBridge::onNotify));
 }
 
-void DispatcherBridge::initialize(Addressbox* addressbox, FBTreeView* view, FBTreeModel* model) {
+void DispatcherBridge::initialize(Addressbox* addressbox, Searchbar* searchbar, FBTreeView* view, FBTreeModel* model) {
     this->mAddressbox = addressbox;
+    this->mSearchbar = searchbar;
     this->mView = view;
     this->mModel = model;
 }
 
 bool DispatcherBridge::inProgress() {
     return this->mInProgress;
+}
+
+void DispatcherBridge::onStart() {
+    pluginLog(LogLevel::Info, "Changing buttons, refesh has began.");
+    this->mAddressbox->setState(false);
+    this->mSearchbar->set_sensitive(false);
+    this->mInProgress = true;
 }
 
 void DispatcherBridge::notify() {
@@ -35,14 +44,10 @@ void DispatcherBridge::updateProgressState() {
         pluginLog(LogLevel::Info, "Thread reported progress done");
         this->mInProgress = false;
         this->mAddressbox->setState(true);
+        this->mSearchbar->set_sensitive(true);
         this->mAddressbox->setProgress(0.0);
         this->mView->setModel();
     } else {
-        if (!this->mInProgress) {
-            pluginLog(LogLevel::Info, "Thread just started running, changing buttons");
-            this->mAddressbox->setState(false);
-            this->mInProgress = true;
-        }
         this->mAddressbox->setProgress(progress);
     }
 }

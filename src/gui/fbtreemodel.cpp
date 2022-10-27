@@ -47,6 +47,7 @@ void FBTreeModel::refreshTree() {
     }
     this->mRefreshLock = true;
     this->mView->unset_model();
+    this->mBridge->onStart();
     this->mRefreshThread = new std::thread(&FBTreeModel::refreshThread, this);
 }
 

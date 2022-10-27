@@ -12,9 +12,11 @@ public:
     DispatcherBridge();
     ~DispatcherBridge();
 
-    void initialize(Addressbox* addressbox, FBTreeView* view, FBTreeModel* model);
+    void initialize(Addressbox* addressbox, Searchbar* searchbar, FBTreeView* view, FBTreeModel* model);
 
     bool inProgress();
+
+    void onStart();
 
     /**
      * Notifies dispatcher.
@@ -22,6 +24,7 @@ public:
     void notify();
 private:
     Addressbox* mAddressbox;
+    Searchbar* mSearchbar;
     FBTreeView* mView;
     FBTreeModel* mModel;
 
