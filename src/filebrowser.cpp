@@ -1,9 +1,20 @@
 #include "filebrowser.hpp"
 
-#include "string.h"
+#include <string.h>
 #include <algorithm>
 #include <sys/stat.h>
+
+#ifndef WIN32
 #include <unistd.h>
+#endif
+
+#ifdef WIN32
+#define stat _stat
+#endif
+
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#endif
 
 #include "settings.hpp"
 
@@ -11,7 +22,6 @@ std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(std::file
     std::vector<std::filesystem::directory_entry> files = {};
     std::string entryLowercase;
     for(const auto &entry : std::filesystem::directory_iterator(path)) {
-        // Replace with non-POSIX?
         struct stat buffer; 
         // Check permissions and errors
         if (stat(entry.path().c_str(), &buffer) != 0 || access(entry.path().c_str(), R_OK)) {
@@ -43,7 +53,6 @@ std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(std::file
     }
 
     if (sort) {
-        // Replace with non-POSIX?
         std::sort(files.begin(), files.end(), 
             [](const std::filesystem::directory_entry &s1, const std::filesystem::directory_entry &s2) -> bool {
                 return strcasecmp(s1.path().c_str(), s2.path().c_str()) < 0 ? true : false;
