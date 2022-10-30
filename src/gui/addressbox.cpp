@@ -20,7 +20,7 @@ mGoButton() {
     this->mGoButton.set_margin_right(1);
     this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName("go-next", ICON_SIZE))));
 
-    this->mAddressBar.signal_activate().connect(sigc::mem_fun(this, &Addressbox::on_go_button_click));
+    this->mAddressBar.signal_activate().connect(sigc::mem_fun(*this, &Addressbox::on_go_button_click));
 
     this->pack_start(this->mAddressBar, true, true);
     this->pack_start(this->mGoButton, false, true);

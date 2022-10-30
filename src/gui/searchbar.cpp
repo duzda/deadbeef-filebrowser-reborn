@@ -13,7 +13,7 @@ Searchbar::Searchbar() {
 
 void Searchbar::initialize(FBTreeFilter* filter) {
     this->mFilter = filter;
-    this->signal_changed().connect(sigc::mem_fun(this, &Searchbar::on_change));
+    this->signal_changed().connect(sigc::mem_fun(*this, &Searchbar::on_change));
 }
 
 void Searchbar::on_change() {
