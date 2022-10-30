@@ -55,8 +55,8 @@ void FBTreeModel::refreshThread() {
     this->clear();
     pluginLog(LogLevel::Info, "Loading tree structure");
     auto filelist = Filebrowser::getFileList(mTreeDirectory, true, false);
-    float progressTotal = filelist.size();
-    float progressIteration = 0;
+    double progressTotal = filelist.size();
+    double progressIteration = 0;
     this->mThreadProgress = 0;
     if (progressTotal > 0) {
         for (auto &entry : filelist) {
