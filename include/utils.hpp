@@ -35,15 +35,6 @@ public:
     static Glib::RefPtr<Gdk::Pixbuf> getIconByName(const char* name, uint size);
 
     /**
-     * Replaces & with &amp; as defined by GTK.
-     * 
-     * @param tooltip String to be cleaned.
-     * 
-     * @return Edited string.
-     */
-    static std::string escapeTooltip(std::string tooltip);
-
-    /**
      * Retrieves all supported extensions via deadbeef api
      * 
      * @return Vector of all supported extensions

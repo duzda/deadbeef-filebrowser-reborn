@@ -103,7 +103,7 @@ void FBTreeModel::fillRow(std::filesystem::directory_entry entry, const Gtk::Tre
     row[ModelColumns.ColumnIcon] = icon;
     row[ModelColumns.ColumnName] = entry.path().filename();
     row[ModelColumns.ColumnURI] = entry.path().string().erase(0, mTreeDirectory.string().size());
-    row[ModelColumns.ColumnTooltip] = Utils::escapeTooltip(entry.path());
+    row[ModelColumns.ColumnTooltip] = Glib::Markup::escape_text(entry.path().string());
     row[ModelColumns.ColumnVisibility] = true;
 
     if (entry.is_directory() && !std::filesystem::is_empty(entry)) {

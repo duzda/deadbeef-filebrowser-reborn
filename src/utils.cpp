@@ -18,19 +18,6 @@ Glib::RefPtr<Gdk::Pixbuf> Utils::getIcon(std::filesystem::path path, uint size) 
     return icon;
 }
 
-std::string Utils::escapeTooltip(std::string tooltip) {
-    uint i = 0;
-    std::string n = tooltip;
-    // Memory leak? See Valgrind
-    for (char const &c : n) {
-        i++;
-        if (c == '&') {
-            n.insert(i, "amp;");
-        }
-    }
-    return n;
-}
-
 Glib::RefPtr<Gdk::Pixbuf> Utils::getIconByName(const char* name, uint size) {
     Glib::RefPtr<Gtk::IconTheme> theme = Gtk::IconTheme::get_default();
     Gtk::IconInfo icon = theme->lookup_icon(name, size);
