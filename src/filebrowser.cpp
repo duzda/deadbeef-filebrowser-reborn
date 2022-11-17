@@ -20,7 +20,7 @@
 
 std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(std::filesystem::path path, bool sort, bool showHiddenFiles) {
     std::vector<std::filesystem::directory_entry> files = {};
-    std::string entryLowercase;
+
     for(const auto &entry : std::filesystem::directory_iterator(path)) {
         struct stat buffer; 
         // Check permissions and errors
