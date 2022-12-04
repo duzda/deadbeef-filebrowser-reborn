@@ -5,9 +5,9 @@
 #include "gui.hpp"
 
 /**
- * Extends Gtk::Entry, communicates with FilebrowserFilter to filter out results.
+ * Extends Gtk::SearchEntry, communicates with FilebrowserFilter to filter out results.
  */
-class GUI::Searchbar : public Gtk::Entry {
+class GUI::Searchbar : public Gtk::SearchEntry {
 public:
     Searchbar();
     ~Searchbar();
