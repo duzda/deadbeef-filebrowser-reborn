@@ -5,14 +5,14 @@
 #include "oggreader.hpp"
 #include "wavreader.hpp"
 
-#include "utils.hpp"
+#include "iconutils.hpp"
 
 #include <boost/algorithm/string.hpp>
 
 Glib::RefPtr<Gdk::Pixbuf> ReaderFactory::getImage(std::filesystem::path path, int size, bool* shouldCache) {
     *shouldCache = false;
     if (!path.has_extension()) {
-        return Utils::getIconByName("audio-x-generic", size);
+        return IconUtils::getIconByName("audio-x-generic", size);
     }
 
     std::string extension = path.extension();
@@ -31,7 +31,7 @@ Glib::RefPtr<Gdk::Pixbuf> ReaderFactory::getImage(std::filesystem::path path, in
         }
     }
 
-    return Utils::getIconByName("audio-x-generic", size);
+    return IconUtils::getIconByName("audio-x-generic", size);
 }
 
 Reader* ReaderFactory::createReader(std::string extension) {

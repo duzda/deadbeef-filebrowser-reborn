@@ -7,7 +7,7 @@
 #include "fbtreeview.hpp"
 #include "plugin.hpp"
 #include "settings.hpp"
-#include "utils.hpp"
+#include "iconutils.hpp"
 
 using namespace GUI;
 
@@ -18,7 +18,7 @@ mGoButton() {
     this->mGoButton.set_margin_bottom(1);
     this->mGoButton.set_margin_left(1);
     this->mGoButton.set_margin_right(1);
-    this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName("go-next", ICON_SIZE))));
+    this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(IconUtils::getIconByName("go-next", ICON_SIZE))));
 
     this->mAddressBar.signal_activate().connect(sigc::mem_fun(*this, &Addressbox::on_go_button_click));
 
@@ -50,7 +50,7 @@ void Addressbox::setProgress(double progress) {
 
 void Addressbox::setState(bool running) {
     this->mAddressBar.set_sensitive(running);
-    this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(Utils::getIconByName(running ? "go-next" : "process-stop", ICON_SIZE))));
+    this->mGoButton.set_image(*Gtk::manage(new Gtk::Image(IconUtils::getIconByName(running ? "go-next" : "process-stop", ICON_SIZE))));
 }
 
 void Addressbox::on_go_button_click() {

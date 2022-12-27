@@ -1,13 +1,13 @@
 #include "searchbar.hpp"
 
 #include "fbtreefilter.hpp"
-#include "utils.hpp"
+#include "iconutils.hpp"
 
 using namespace GUI;
 
 Searchbar::Searchbar() {
     auto primaryIcon = this->property_primary_icon_pixbuf();
-    primaryIcon = Utils::getIconByName("system-search", 16);
+    primaryIcon = IconUtils::getIconByName("system-search", 16);
     this->set_sensitive(false);
 }
 

@@ -7,7 +7,10 @@
  * Include any class you need specificly, never include this class!!!
  */
 namespace Cache {
+    class Utils;
+
     namespace Covers {
+        class Utils;
         class CoverFactory;
         class Cover;
         class CoverFirst;

@@ -43,4 +43,11 @@ private:
     int albumAlgorithm;
 
     std::vector<std::string> validExtensions;
+
+    /**
+     * Retrieves all supported extensions via deadbeef api
+     * 
+     * @return Vector of all supported extensions
+     */
+    static std::vector<std::string> createValidExtensions();
 };

@@ -1,11 +1,13 @@
 #include "settings.hpp"
 
 #include "plugin.hpp"
-#include "utils.hpp"
+#include "cache/utils.hpp"
+
+#include <gtkmm.h>
 
 Settings::Settings() {
     this->update();
-    this->validExtensions = Utils::createValidExtensions();
+    this->validExtensions = Settings::createValidExtensions();
 }
 
 Settings& Settings::getInstance() {
@@ -19,7 +21,7 @@ void Settings::onUpdate() {
     this->update();
 
      if (oldAlbumAlgorithm != this->albumAlgorithm) {
-        Utils::clearCache();
+        Cache::Utils::clearCache();
      }
 }
 
@@ -51,4 +53,21 @@ int Settings::getAlbumAlgorithm() {
 
 std::vector<std::string> Settings::getValidExtensions() {
     return this->validExtensions;
+}
+
+std::vector<std::string> Settings::createValidExtensions() {
+    std::vector<std::string> extensions;
+
+    // Array
+    struct DB_decoder_s **decoders = deadbeef->plug_get_decoder_list();
+    for (gint i = 0; decoders[i]; i++) {
+        const char** exts = decoders[i]->exts;
+        for (gint j = 0; exts[j]; j++) {
+            // Does anybody use this ridicilously long extensions?
+            GString *buf = g_string_sized_new(32);
+            g_string_append_printf(buf, ".%s", exts[j]);
+            extensions.push_back(buf->str);
+        }
+    }
+    return extensions;
 }

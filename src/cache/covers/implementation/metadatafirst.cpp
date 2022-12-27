@@ -1,7 +1,8 @@
 #include "metadatafirst.hpp"
 
 #include "readerfactory.hpp"
-#include "utils.hpp"
+#include "cache/covers/utils.hpp"
+#include "iconutils.hpp"
 #include "filebrowser.hpp"
 
 using namespace Cache::Covers;
@@ -80,7 +81,7 @@ Glib::RefPtr<Gdk::Pixbuf> MetadataFirst::hasChildrenIcon(std::filesystem::path c
         }
     }
 
-    return Utils::getIconByName("folder", size);
+    return IconUtils::getIconByName("folder", size);
 }
 
 MetadataFirst::~MetadataFirst() {

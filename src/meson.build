@@ -10,7 +10,9 @@ add_project_arguments('-I\usr\include\deadbeef', language: 'c')
 source_files = files(
     'plugin.cpp',
     'filebrowser.cpp',
-    'utils.cpp',
+    'iconutils.cpp',
+    'cache/utils.cpp',
+    'cache/covers/utils.cpp',
     'cache/covers/cover.cpp',
     'cache/covers/coverfactory.cpp',
     'cache/covers/implementation/coverfirst.cpp',

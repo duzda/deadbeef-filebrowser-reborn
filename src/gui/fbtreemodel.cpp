@@ -5,7 +5,7 @@
 #include "dispatcherbridge.hpp"
 #include "fbtreeview.hpp"
 #include "filebrowser.hpp"
-#include "utils.hpp"
+#include "iconutils.hpp"
 #include "plugin.hpp"
 #include "addressbox.hpp"
 #include "settings.hpp"
@@ -92,7 +92,7 @@ void FBTreeModel::stopThread() {
 }
 
 void FBTreeModel::fillRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent) {
-    Glib::RefPtr<Gdk::Pixbuf> icon = Utils::getIcon(entry, Settings::getInstance().getIconSize());
+    Glib::RefPtr<Gdk::Pixbuf> icon = IconUtils::getIcon(entry, Settings::getInstance().getIconSize());
     Gtk::TreeModel::iterator iter;
     if (parent) {
         iter = append((*parent));

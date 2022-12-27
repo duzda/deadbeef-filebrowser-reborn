@@ -1,7 +1,8 @@
 #include "coverfirst.hpp"
 
 #include "readerfactory.hpp"
-#include "utils.hpp"
+#include "cache/covers/utils.hpp"
+#include "iconutils.hpp"
 #include "filebrowser.hpp"
 
 using namespace Cache::Covers;
@@ -31,7 +32,7 @@ Glib::RefPtr<Gdk::Pixbuf> CoverFirst::getIcon(std::filesystem::path path, uint s
                     lastDirectory = path;
                     lastIcon = icon;
                 } else {
-                    icon = Utils::getIconByName("folder", size);
+                    icon = IconUtils::getIconByName("folder", size);
                 }
             } else {
                 bool useCache = false;

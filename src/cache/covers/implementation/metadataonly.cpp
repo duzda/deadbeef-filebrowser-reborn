@@ -1,7 +1,8 @@
 #include "metadataonly.hpp"
 
 #include "readerfactory.hpp"
-#include "utils.hpp"
+#include "cache/covers/utils.hpp"
+#include "iconutils.hpp"
 #include "filebrowser.hpp"
 
 using namespace Cache::Covers;
@@ -61,7 +62,7 @@ Glib::RefPtr<Gdk::Pixbuf> MetadataOnly::hasChildrenIcon(std::filesystem::path ca
         }
     }
 
-    return Utils::getIconByName("folder", size);
+    return IconUtils::getIconByName("folder", size);
 }
 
 MetadataOnly::~MetadataOnly() {
