@@ -9,6 +9,7 @@
 #include "plugin.hpp"
 #include "addressbox.hpp"
 #include "settings.hpp"
+#include "serializer.hpp"
 
 using namespace GUI;
 
@@ -79,6 +80,8 @@ void FBTreeModel::refreshThread() {
     this->mRefreshLock = false;
     pluginLog(LogLevel::Info, "Notifying dispatcher - task done");
     this->mThreadProgress = 1;
+    Cache::TreeModel::Serializer::save(this);
+    pluginLog(LogLevel::Info, "Saved Tree Model");
     this->mBridge->notify();
 }
 

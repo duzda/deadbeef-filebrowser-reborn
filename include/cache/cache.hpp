@@ -19,4 +19,8 @@ namespace Cache {
 
         const std::vector<std::string> SUPPORTED_COVERS = {"cover.jpg", "cover.png", "front.jpg", "front.png"};
     }
+
+    namespace TreeModel {
+        class Serializer;
+    }
 }

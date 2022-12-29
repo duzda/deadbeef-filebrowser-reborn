@@ -5,9 +5,14 @@
 #include <thread>
 #include <atomic>
 #include <memory>
+#include <boost/serialization/split_member.hpp>
+#include <boost/serialization/vector.hpp>
 
 #include "gui.hpp"
 #include "modelcolumns.hpp"
+#include "fbtreeview.hpp"
+
+#include "plugin.hpp"
 
 /**
  * Extends Gtk::TreeStore, container for all the data, see ModelColumns for used columns.
@@ -86,4 +91,80 @@ private:
      * Fills information row to treeview.
      */
     void fillEmptyRow();
+
+private:
+    friend boost::serialization::access;
+
+    struct Row {
+        int depth;
+        std::string icon;
+        std::string name;
+        std::string uri;
+        std::string tooltip;
+
+        template<class Archive>
+        void serialize(Archive &ar, const unsigned int version) {
+            ar & depth & icon & name & uri & tooltip;
+        }
+    };
+
+    template<class Archive>
+    void save(Archive &ar, const unsigned int version) const {
+        std::vector<Row> rows;
+        for (auto iter = this->children().begin(); iter != this->children().end(); iter++) {
+            this->saveRecursively(ar, &rows, iter, 0, version);
+        }
+        ar << rows;
+    }
+
+    template<class Archive>
+    void saveRecursively(Archive &ar, std::vector<Row>* rows, Gtk::TreeIter iter, int depth, const unsigned int version) const {
+        Row row;
+        row.depth = depth;
+        row.icon = iter->get_value(this->ModelColumns.ColumnIcon).get()->to_string();
+        row.name = iter->get_value(this->ModelColumns.ColumnName);
+        row.uri = iter->get_value(this->ModelColumns.ColumnURI);
+        row.tooltip = iter->get_value(this->ModelColumns.ColumnTooltip);
+        (*rows).push_back(row);
+
+        if (!iter->children().empty()) {
+            for (auto child = iter->children().begin(); child != iter->children().end(); child++) {
+                this->saveRecursively(ar, rows, child, depth + 1, version);
+            }
+        }
+    }
+
+    template<class Archive>
+    void load(Archive &ar, const unsigned int version) {
+        std::vector<Row> rows;
+        Gtk::TreeModel::iterator iter;
+        std::vector<const Gtk::TreeNodeChildren*> parentRows(10);
+        int lastDepth = 0;
+        ar >> rows;
+        for(const auto &row : rows) {
+            if (row.depth < lastDepth) {
+                parentRows.pop_back();
+            }
+
+            if (parentRows.size() > 0) {
+                iter = this->append();
+                //iter = this->append((*parentRows[parentRows.size() - 1]));
+            } else {
+                iter = this->append();
+            }
+
+            Gtk::TreeRow treeRow = *iter;
+            //treeRow[this->ModelColumns.ColumnIcon] = Gdk::Pixbuf::create_from_resource(row.icon);
+            treeRow[this->ModelColumns.ColumnName] = row.name;
+            treeRow[this->ModelColumns.ColumnURI] = row.uri;
+            treeRow[this->ModelColumns.ColumnTooltip] = row.tooltip;
+            treeRow[this->ModelColumns.ColumnVisibility] = true;
+            
+            parentRows.push_back(&treeRow.children());
+        }
+
+        this->mView->setModel();
+    }
+
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };

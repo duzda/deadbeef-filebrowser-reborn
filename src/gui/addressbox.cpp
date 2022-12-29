@@ -31,6 +31,7 @@ void Addressbox::initialize(DispatcherBridge* bridge, FBTreeView* view, FBTreeFi
     this->mView = view;
     this->mFilter = filter;
     this->mModel = model;
+    this->mAddressBar.set_text(Settings::getInstance().getDefaultPath());
 }
 
 void Addressbox::setAddress(std::string address) {
