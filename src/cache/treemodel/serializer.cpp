@@ -18,7 +18,7 @@ void Serializer::save(GUI::FBTreeModel* model) {
         boost::archive::binary_oarchive oa(ofs);
         oa << (*model);
     } catch (const boost::archive::archive_exception &e) {
-        pluginLog(LogLevel::Error, e.what());
+        pluginLog(LogLevel::Error, "Serialization - " + std::string(e.what()));
     }
 }
 
@@ -28,7 +28,7 @@ void Serializer::load(GUI::FBTreeModel* model) {
         boost::archive::binary_iarchive ia(ifs);
         ia >> (*model);
     } catch (const boost::archive::archive_exception &e) {
-        pluginLog(LogLevel::Error, e.what());
+        pluginLog(LogLevel::Error, "Serialization - " + std::string(e.what()));
     }
 }
 

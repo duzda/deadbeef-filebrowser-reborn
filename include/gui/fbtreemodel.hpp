@@ -95,16 +95,36 @@ private:
 private:
     friend boost::serialization::access;
 
-    struct Row {
-        int depth;
-        std::string icon;
-        std::string name;
-        std::string uri;
-        std::string tooltip;
+    struct Image {
+        std::vector<guint8> data;
+        Gdk::Colorspace colorspace;
+        gboolean has_alpha;
+        int bits_per_sample;
+        int width;
+        int height;
+        int rowstride;
 
         template<class Archive>
         void serialize(Archive &ar, const unsigned int version) {
-            ar & depth & icon & name & uri & tooltip;
+            ar & data & colorspace & has_alpha & bits_per_sample & width & height & rowstride;
+        }
+    };
+
+    struct Row {
+        int depth;
+        std::string name;
+        std::string uri;
+        std::string tooltip;
+        bool inheritImage;
+        Image image;
+
+        template<class Archive>
+        void serialize(Archive &ar, const unsigned int version) {
+            ar & depth & name & uri & tooltip & inheritImage;
+
+            if (inheritImage) {
+                ar & image;
+            }
         }
     };
 
@@ -120,8 +140,17 @@ private:
     template<class Archive>
     void saveRecursively(Archive &ar, std::vector<Row>* rows, Gtk::TreeIter iter, int depth, const unsigned int version) const {
         Row row;
+        auto icon = iter->get_value(this->ModelColumns.ColumnIcon);
+        pluginLog(LogLevel::Info, std::to_string(depth));
         row.depth = depth;
-        row.icon = iter->get_value(this->ModelColumns.ColumnIcon).get()->to_string();
+        row.image.data.reserve(icon->get_byte_length());
+        std::copy(icon->get_pixels(), icon->get_pixels() + icon->get_byte_length(), std::back_inserter(row.image.data));
+        row.image.colorspace = icon->get_colorspace();
+        row.image.has_alpha = icon->get_has_alpha();
+        row.image.bits_per_sample = icon->get_bits_per_sample();
+        row.image.width = icon->get_width();
+        row.image.height = icon->get_height();
+        row.image.rowstride = icon->get_rowstride();
         row.name = iter->get_value(this->ModelColumns.ColumnName);
         row.uri = iter->get_value(this->ModelColumns.ColumnURI);
         row.tooltip = iter->get_value(this->ModelColumns.ColumnTooltip);
@@ -138,27 +167,29 @@ private:
     void load(Archive &ar, const unsigned int version) {
         std::vector<Row> rows;
         Gtk::TreeModel::iterator iter;
-        std::vector<const Gtk::TreeNodeChildren*> parentRows(10);
+        std::vector<const Gtk::TreeNodeChildren*> parentRows;
         int lastDepth = 0;
         ar >> rows;
         for(const auto &row : rows) {
-            if (row.depth < lastDepth) {
+            if (parentRows.size() > 0 && row.depth <= lastDepth) {
                 parentRows.pop_back();
             }
 
             if (parentRows.size() > 0) {
-                iter = this->append();
-                //iter = this->append((*parentRows[parentRows.size() - 1]));
+                pluginLog(LogLevel::Info, std::to_string(parentRows.size()));
+                iter = this->append((*parentRows[parentRows.size() - 1]));
             } else {
                 iter = this->append();
             }
 
             Gtk::TreeRow treeRow = *iter;
-            //treeRow[this->ModelColumns.ColumnIcon] = Gdk::Pixbuf::create_from_resource(row.icon);
+            treeRow[this->ModelColumns.ColumnIcon] = Gdk::Pixbuf::create_from_data(row.image.data.data(), row.image.colorspace, row.image.has_alpha, 
+                row.image.bits_per_sample, row.image.width, row.image.height, row.image.rowstride);
             treeRow[this->ModelColumns.ColumnName] = row.name;
             treeRow[this->ModelColumns.ColumnURI] = row.uri;
             treeRow[this->ModelColumns.ColumnTooltip] = row.tooltip;
             treeRow[this->ModelColumns.ColumnVisibility] = true;
+            lastDepth = row.depth;
             
             parentRows.push_back(&treeRow.children());
         }
