@@ -19,6 +19,8 @@ void Serializer::save(GUI::FBTreeModel* model) {
         oa << (*model);
     } catch (const boost::archive::archive_exception &e) {
         pluginLog(LogLevel::Error, "Serialization - " + std::string(e.what()));
+    } catch (const std::exception &e) {
+        pluginLog(LogLevel::Error, "Serialization - " + std::string(e.what()));
     }
 }
 
@@ -29,6 +31,9 @@ void Serializer::load(GUI::FBTreeModel* model) {
         ia >> (*model);
     } catch (const boost::archive::archive_exception &e) {
         pluginLog(LogLevel::Error, "Serialization - " + std::string(e.what()));
+    } catch (...) {
+        pluginLog(LogLevel::Error, "Serialization - Loading went seriously wrong, boiling out");
+        model->refreshTree();
     }
 }
 

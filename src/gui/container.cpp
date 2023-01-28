@@ -32,9 +32,10 @@ Container::Container() :
     this->pack_start(mScrolledWindow, true, true);
 
     if (Cache::TreeModel::Serializer::exists()) {
+        this->mModel->setTreeRoot(Settings::getInstance().getDefaultPath());
         Cache::TreeModel::Serializer::load(this->mModel.get());
     } else {
-        mAddressbox.setAddress(Settings::getInstance().getDefaultPath());
+        this->mAddressbox.setAddress(Settings::getInstance().getDefaultPath());
     }
 }
 

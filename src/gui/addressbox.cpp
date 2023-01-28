@@ -66,6 +66,7 @@ void Addressbox::on_go_button_click() {
     this->mAddressBar.set_text(address);
     if (std::filesystem::exists((std::string)address) && std::filesystem::is_directory((std::string)address)) {
         this->mModel->setTreeRoot((std::string)address);
+        this->mModel->refreshTree();
     }
 }
 

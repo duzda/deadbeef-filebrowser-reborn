@@ -32,7 +32,7 @@ public:
     double getProgress();
 
     /**
-     * Sets new root directory and refreshes tree.
+     * Sets new root directory, refreshTree should probably be called immediately after.
      * 
      * @param newDirectory New root directory
      */
@@ -115,16 +115,11 @@ private:
         std::string name;
         std::string uri;
         std::string tooltip;
-        bool inheritImage;
         Image image;
 
         template<class Archive>
         void serialize(Archive &ar, const unsigned int version) {
-            ar & depth & name & uri & tooltip & inheritImage;
-
-            if (inheritImage) {
-                ar & image;
-            }
+            ar & depth & name & uri & tooltip & image;
         }
     };
 
@@ -141,9 +136,15 @@ private:
     void saveRecursively(Archive &ar, std::vector<Row>* rows, Gtk::TreeIter iter, int depth, const unsigned int version) const {
         Row row;
         auto icon = iter->get_value(this->ModelColumns.ColumnIcon);
-        pluginLog(LogLevel::Info, std::to_string(depth));
         row.depth = depth;
         row.image.data.reserve(icon->get_byte_length());
+        pluginLog(LogLevel::Info, std::to_string(icon->get_byte_length()));
+        pluginLog(LogLevel::Info, std::to_string(icon->get_colorspace()));
+        pluginLog(LogLevel::Info, std::to_string(icon->get_has_alpha()));
+        pluginLog(LogLevel::Info, std::to_string(icon->get_bits_per_sample()));
+        pluginLog(LogLevel::Info, std::to_string(icon->get_width()));
+        pluginLog(LogLevel::Info, std::to_string(icon->get_height()));
+        pluginLog(LogLevel::Info, std::to_string(icon->get_rowstride()));
         std::copy(icon->get_pixels(), icon->get_pixels() + icon->get_byte_length(), std::back_inserter(row.image.data));
         row.image.colorspace = icon->get_colorspace();
         row.image.has_alpha = icon->get_has_alpha();
@@ -167,17 +168,28 @@ private:
     void load(Archive &ar, const unsigned int version) {
         std::vector<Row> rows;
         Gtk::TreeModel::iterator iter;
-        std::vector<const Gtk::TreeNodeChildren*> parentRows;
-        int lastDepth = 0;
+        // Using ChildRow will free TreeRow from memory and make it unaccessible
+        std::vector<Gtk::TreeRow> parentRows;
+        int lastDepth = -1;
         ar >> rows;
         for(const auto &row : rows) {
+            pluginLog(LogLevel::Info, std::to_string(row.image.data.size()));
+            pluginLog(LogLevel::Info, std::to_string(row.image.colorspace));
+            pluginLog(LogLevel::Info, std::to_string(row.image.has_alpha));
+            pluginLog(LogLevel::Info, std::to_string(row.image.bits_per_sample));
+            pluginLog(LogLevel::Info, std::to_string(row.image.width));
+            pluginLog(LogLevel::Info, std::to_string(row.image.height));
+            pluginLog(LogLevel::Info, std::to_string(row.image.rowstride));
             if (parentRows.size() > 0 && row.depth <= lastDepth) {
-                parentRows.pop_back();
+                // We always add latest TreeRow, we should pop it if the depth is equal, 
+                // if it's lesser, we should pop all higher TreeRows
+                for (int i = lastDepth; i > row.depth - 1; i--) {
+                    parentRows.pop_back();
+                }
             }
 
             if (parentRows.size() > 0) {
-                pluginLog(LogLevel::Info, std::to_string(parentRows.size()));
-                iter = this->append((*parentRows[parentRows.size() - 1]));
+                iter = this->append((parentRows[parentRows.size() - 1].children()));
             } else {
                 iter = this->append();
             }
@@ -191,7 +203,7 @@ private:
             treeRow[this->ModelColumns.ColumnVisibility] = true;
             lastDepth = row.depth;
             
-            parentRows.push_back(&treeRow.children());
+            parentRows.push_back(treeRow);
         }
 
         this->mView->setModel();

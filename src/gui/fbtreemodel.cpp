@@ -39,7 +39,6 @@ void FBTreeModel::setTreeRoot(std::filesystem::path newDirectory) {
         return;
     }
     this->mTreeDirectory = newDirectory;
-    this->refreshTree();
 }
 
 void FBTreeModel::refreshTree() {
