@@ -198,8 +198,16 @@ private:
             }
 
             Gtk::TreeRow treeRow = *iter;
-            treeRow[this->ModelColumns.ColumnIcon] = Gdk::Pixbuf::create_from_data(row.image.data.data(), Gdk::COLORSPACE_RGB, false,
+            // We need to copy all the data on heap, as the original vector will get collected
+            void* data = std::malloc(row.image.data.size());
+            std::memcpy(data, row.image.data.data(), row.image.data.size());
+            auto image = Gdk::Pixbuf::create_from_data(static_cast<const guint8*>(data), Gdk::COLORSPACE_RGB, false,
                 8, row.image.size, row.image.size, row.image.rowstride);
+            image->add_destroy_notify_callback(data, [](void* data) -> void* {
+                std::free(data);
+                return nullptr;
+            });
+            treeRow[this->ModelColumns.ColumnIcon] = image;
             treeRow[this->ModelColumns.ColumnName] = row.name;
             treeRow[this->ModelColumns.ColumnURI] = row.uri;
             treeRow[this->ModelColumns.ColumnTooltip] = row.tooltip;
