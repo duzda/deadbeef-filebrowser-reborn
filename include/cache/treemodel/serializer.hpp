@@ -12,6 +12,7 @@ public:
     static void load(GUI::FBTreeModel* model);
 
     /**
+     * Compares timestamp of cached tree model and path
      * @param path
      * 
      * @return True if tree should be recovered
