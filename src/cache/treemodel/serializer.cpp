@@ -14,7 +14,7 @@ using namespace Cache::TreeModel;
 
 void Serializer::save(GUI::FBTreeModel* model) {
     try {
-        pluginLog(LogLevel::Info, "Saving Tree Model");
+        pluginLog(LogLevel::Info, "Serialization - Saving Tree Model");
         std::ofstream ofs(Serializer::getPath(), std::ios::binary);
         boost::archive::binary_oarchive oa(ofs);
         oa << (*model);
@@ -28,7 +28,7 @@ void Serializer::save(GUI::FBTreeModel* model) {
 
 void Serializer::load(GUI::FBTreeModel* model) {
     try {
-        pluginLog(LogLevel::Info, "Loading Tree Model");
+        pluginLog(LogLevel::Info, "Serialization - Loading Tree Model");
         std::ifstream ifs(Serializer::getPath(), std::ios::binary);
         boost::archive::binary_iarchive ia(ifs);
         ia >> (*model);
@@ -39,6 +39,17 @@ void Serializer::load(GUI::FBTreeModel* model) {
         pluginLog(LogLevel::Error, "Serialization - Loading went seriously wrong, boiling out");
         model->refreshTree(true);
     }
+}
+
+bool Serializer::shouldRecover(std::filesystem::path path) {
+    if (!Serializer::exists()) {
+        return false;
+    }
+
+    auto cacheTime = std::filesystem::last_write_time(Serializer::getPath());
+    auto pathTime = std::filesystem::last_write_time(path);
+
+    return cacheTime > pathTime;
 }
 
 bool Serializer::exists() {

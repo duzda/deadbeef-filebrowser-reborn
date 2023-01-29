@@ -10,7 +10,14 @@ class Cache::TreeModel::Serializer {
 public:
     static void save(GUI::FBTreeModel* model);
     static void load(GUI::FBTreeModel* model);
-    static bool exists();
+
+    /**
+     * @param path
+     * 
+     * @return True if tree should be recovered
+    */
+    static bool shouldRecover(std::filesystem::path path);
 private:
+    static bool exists();
     static std::filesystem::path getPath();
 };
