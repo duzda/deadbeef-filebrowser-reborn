@@ -5,7 +5,6 @@
 #include "fbtreeview.hpp"
 #include "filebrowser.hpp"
 #include "iconutils.hpp"
-#include "plugin.hpp"
 #include "addressbox.hpp"
 #include "settings.hpp"
 #include "serializer.hpp"

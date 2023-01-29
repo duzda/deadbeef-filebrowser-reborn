@@ -28,6 +28,7 @@ source_files = files(
     'gui/searchbar.cpp',
     'gui/addressbox.cpp',
     'gui/fbtreemodel.cpp',
+    'gui/modelserializer.cpp',
     'gui/fbtreefilter.cpp',
     'gui/fbtreepopup.cpp',
     'gui/views/fbtreeview.cpp',
