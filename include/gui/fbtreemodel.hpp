@@ -130,6 +130,8 @@ private:
         }
     };
 
+    // Implementation in modelserializer.cpp
+
     template<class Archive>
     void save(Archive &ar, const unsigned int version) const;
 
