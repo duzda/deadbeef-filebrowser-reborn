@@ -32,11 +32,6 @@ private:
     Glib::Dispatcher mDispatcher;
 
     /**
-     * Dispatcher event.
-     */
-    void onNotify();
-
-    /**
      * Changes button according to progress, updates progress bar, 
      * this is just a wild guess, and progress gets counted only by the root folders.
      */

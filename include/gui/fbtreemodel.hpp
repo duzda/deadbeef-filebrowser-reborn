@@ -11,6 +11,7 @@
 #include "gui.hpp"
 #include "modelcolumns.hpp"
 #include "fbtreeview.hpp"
+#include "dispatcherbridge.hpp"
 
 #include "plugin.hpp"
 
@@ -27,7 +28,7 @@ public:
     /**
      * Returns approximate progress of reading directory tree.
      * 
-     * @return Float between 0 and 1, 1 when finished
+     * @return Double between 0 and 1, 1 when finished
      */
     double getProgress();
 
@@ -41,8 +42,15 @@ public:
     /**
      * Creates new thread that refreshes tree, removes all entries, and fills them again. 
      * If you want to filter things out, see filebrowserfilter instead.
+     * 
+     * @param force Refresh can be forced, this is good idea if refresh is called due to an error, such as recovering from error while loading cached model
      */
-    void refreshTree();
+    void refreshTree(bool force = false);
+
+    /**
+     * Restores Tree from cache
+    */
+    void initialLoad();
 
     void refreshThread();
 
@@ -97,16 +105,15 @@ private:
 
     struct Image {
         std::vector<guint8> data;
-        Gdk::Colorspace colorspace;
-        gboolean has_alpha;
-        int bits_per_sample;
-        int width;
-        int height;
+        // Colorspace (Add in the future)
+        // Has Alpha (Might add? but it's always 0)
+        // Bits per sample (Add in the future)
+        int size;
         int rowstride;
 
         template<class Archive>
         void serialize(Archive &ar, const unsigned int version) {
-            ar & data & colorspace & has_alpha & bits_per_sample & width & height & rowstride;
+            ar & data & size & rowstride;
         }
     };
 
@@ -135,22 +142,12 @@ private:
     template<class Archive>
     void saveRecursively(Archive &ar, std::vector<Row>* rows, Gtk::TreeIter iter, int depth, const unsigned int version) const {
         Row row;
-        auto icon = iter->get_value(this->ModelColumns.ColumnIcon);
         row.depth = depth;
+        auto icon = iter->get_value(this->ModelColumns.ColumnIcon);
         row.image.data.reserve(icon->get_byte_length());
-        pluginLog(LogLevel::Info, std::to_string(icon->get_byte_length()));
-        pluginLog(LogLevel::Info, std::to_string(icon->get_colorspace()));
-        pluginLog(LogLevel::Info, std::to_string(icon->get_has_alpha()));
-        pluginLog(LogLevel::Info, std::to_string(icon->get_bits_per_sample()));
-        pluginLog(LogLevel::Info, std::to_string(icon->get_width()));
-        pluginLog(LogLevel::Info, std::to_string(icon->get_height()));
-        pluginLog(LogLevel::Info, std::to_string(icon->get_rowstride()));
         std::copy(icon->get_pixels(), icon->get_pixels() + icon->get_byte_length(), std::back_inserter(row.image.data));
-        row.image.colorspace = icon->get_colorspace();
-        row.image.has_alpha = icon->get_has_alpha();
-        row.image.bits_per_sample = icon->get_bits_per_sample();
-        row.image.width = icon->get_width();
-        row.image.height = icon->get_height();
+        // All images are squares, we don't need to save height, just one dimension is enough
+        row.image.size = icon->get_width();
         row.image.rowstride = icon->get_rowstride();
         row.name = iter->get_value(this->ModelColumns.ColumnName);
         row.uri = iter->get_value(this->ModelColumns.ColumnURI);
@@ -172,14 +169,20 @@ private:
         std::vector<Gtk::TreeRow> parentRows;
         int lastDepth = -1;
         ar >> rows;
+
+        double progressTotal = rows.size();
+        double progressIteration = 0.0;
+        this->mThreadProgress = 0.0;
+
         for(const auto &row : rows) {
-            pluginLog(LogLevel::Info, std::to_string(row.image.data.size()));
-            pluginLog(LogLevel::Info, std::to_string(row.image.colorspace));
-            pluginLog(LogLevel::Info, std::to_string(row.image.has_alpha));
-            pluginLog(LogLevel::Info, std::to_string(row.image.bits_per_sample));
-            pluginLog(LogLevel::Info, std::to_string(row.image.width));
-            pluginLog(LogLevel::Info, std::to_string(row.image.height));
-            pluginLog(LogLevel::Info, std::to_string(row.image.rowstride));
+            if (!this->mRefreshThreadRunning.load()) {
+                pluginLog(LogLevel::Info, "Load canceled by user");
+                this->mThreadProgress = 1.0;
+                this->mBridge->notify();
+                this->mRefreshLock = false;
+                return;
+            }
+
             if (parentRows.size() > 0 && row.depth <= lastDepth) {
                 // We always add latest TreeRow, we should pop it if the depth is equal, 
                 // if it's lesser, we should pop all higher TreeRows
@@ -195,8 +198,8 @@ private:
             }
 
             Gtk::TreeRow treeRow = *iter;
-            treeRow[this->ModelColumns.ColumnIcon] = Gdk::Pixbuf::create_from_data(row.image.data.data(), row.image.colorspace, row.image.has_alpha, 
-                row.image.bits_per_sample, row.image.width, row.image.height, row.image.rowstride);
+            treeRow[this->ModelColumns.ColumnIcon] = Gdk::Pixbuf::create_from_data(row.image.data.data(), Gdk::COLORSPACE_RGB, false,
+                8, row.image.size, row.image.size, row.image.rowstride);
             treeRow[this->ModelColumns.ColumnName] = row.name;
             treeRow[this->ModelColumns.ColumnURI] = row.uri;
             treeRow[this->ModelColumns.ColumnTooltip] = row.tooltip;
@@ -204,9 +207,17 @@ private:
             lastDepth = row.depth;
             
             parentRows.push_back(treeRow);
+
+            this->mThreadProgress = progressIteration / progressTotal;
+            this->mBridge->notify();
+            progressIteration++;
         }
 
-        this->mView->setModel();
+        pluginLog(LogLevel::Info, "Structure loaded");
+        this->mRefreshLock = false;
+        pluginLog(LogLevel::Info, "Notifying dispatcher - task done");
+        this->mThreadProgress = 1.0;
+        this->mBridge->notify();
     }
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()

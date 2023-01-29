@@ -14,9 +14,11 @@ using namespace Cache::TreeModel;
 
 void Serializer::save(GUI::FBTreeModel* model) {
     try {
+        pluginLog(LogLevel::Info, "Saving Tree Model");
         std::ofstream ofs(Serializer::getPath(), std::ios::binary);
         boost::archive::binary_oarchive oa(ofs);
         oa << (*model);
+        pluginLog(LogLevel::Info, "Saved Tree Model");
     } catch (const boost::archive::archive_exception &e) {
         pluginLog(LogLevel::Error, "Serialization - " + std::string(e.what()));
     } catch (const std::exception &e) {
@@ -26,14 +28,16 @@ void Serializer::save(GUI::FBTreeModel* model) {
 
 void Serializer::load(GUI::FBTreeModel* model) {
     try {
+        pluginLog(LogLevel::Info, "Loading Tree Model");
         std::ifstream ifs(Serializer::getPath(), std::ios::binary);
         boost::archive::binary_iarchive ia(ifs);
         ia >> (*model);
     } catch (const boost::archive::archive_exception &e) {
         pluginLog(LogLevel::Error, "Serialization - " + std::string(e.what()));
+        model->refreshTree(true);
     } catch (...) {
         pluginLog(LogLevel::Error, "Serialization - Loading went seriously wrong, boiling out");
-        model->refreshTree();
+        model->refreshTree(true);
     }
 }
 

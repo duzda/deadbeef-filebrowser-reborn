@@ -33,7 +33,7 @@ Container::Container() :
 
     if (Cache::TreeModel::Serializer::exists()) {
         this->mModel->setTreeRoot(Settings::getInstance().getDefaultPath());
-        Cache::TreeModel::Serializer::load(this->mModel.get());
+        this->mModel->initialLoad();
     } else {
         this->mAddressbox.setAddress(Settings::getInstance().getDefaultPath());
     }
