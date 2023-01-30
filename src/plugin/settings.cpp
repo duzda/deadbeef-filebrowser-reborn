@@ -2,6 +2,7 @@
 
 #include "plugin.hpp"
 #include "cache/utils.hpp"
+#include "serializer.hpp"
 
 #include <gtkmm.h>
 
@@ -17,11 +18,16 @@ Settings& Settings::getInstance() {
 
 void Settings::onUpdate() {
     int oldAlbumAlgorithm = this->albumAlgorithm;
+    int oldIconSize = this->iconSize;
 
     this->update();
 
      if (oldAlbumAlgorithm != this->albumAlgorithm) {
         Cache::Utils::clearCache();
+     }
+
+     if (oldAlbumAlgorithm != this->albumAlgorithm || oldIconSize != this->iconSize) {
+        Cache::TreeModel::Serializer::clearModel();
      }
 }
 

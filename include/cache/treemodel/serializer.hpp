@@ -18,6 +18,8 @@ public:
      * @return True if tree should be recovered
     */
     static bool shouldRecover(std::filesystem::path path);
+
+    static void clearModel();
 private:
     static bool exists();
     static std::filesystem::path getPath();

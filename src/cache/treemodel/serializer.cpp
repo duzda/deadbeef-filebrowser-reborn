@@ -52,6 +52,14 @@ bool Serializer::shouldRecover(std::filesystem::path path) {
     return cacheTime > pathTime;
 }
 
+void Serializer::clearModel() {
+    auto cache = Serializer::getPath();
+
+    if (std::filesystem::exists(cache)) {
+        std::filesystem::remove(cache);
+    }
+}
+
 bool Serializer::exists() {
     return std::filesystem::exists(Serializer::getPath());
 }
