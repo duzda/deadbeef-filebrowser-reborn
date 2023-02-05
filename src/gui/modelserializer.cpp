@@ -24,6 +24,7 @@ void FBTreeModel::saveRecursively(Archive &ar, std::vector<Row>* rows, Gtk::Tree
     // All images are squares, we don't need to save height, just one dimension is enough
     row.image.size = icon->get_width();
     row.image.rowstride = icon->get_rowstride();
+    row.image.has_alpha = icon->get_has_alpha();
     row.name = iter->get_value(this->ModelColumns.ColumnName);
     row.uri = iter->get_value(this->ModelColumns.ColumnURI);
     row.tooltip = iter->get_value(this->ModelColumns.ColumnTooltip);
@@ -76,7 +77,7 @@ void FBTreeModel::load(Archive &ar, const unsigned int version) {
         // We need to copy all the data on heap, as the original vector will get collected
         void* data = std::malloc(row.image.data.size());
         std::memcpy(data, row.image.data.data(), row.image.data.size());
-        auto image = Gdk::Pixbuf::create_from_data(static_cast<const guint8*>(data), Gdk::COLORSPACE_RGB, false,
+        auto image = Gdk::Pixbuf::create_from_data(static_cast<const guint8*>(data), Gdk::COLORSPACE_RGB, row.image.has_alpha,
             8, row.image.size, row.image.size, row.image.rowstride);
         image->add_destroy_notify_callback(data, [](void* data) -> void* {
             std::free(data);

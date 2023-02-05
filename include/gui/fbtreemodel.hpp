@@ -106,14 +106,14 @@ private:
     struct Image {
         std::vector<guint8> data;
         // Colorspace (Add in the future)
-        // Has Alpha (Might add? but it's always 0)
+        bool has_alpha; // System icons use alpha
         // Bits per sample (Add in the future)
         int size;
         int rowstride;
 
         template<class Archive>
         void serialize(Archive &ar, const unsigned int version) {
-            ar & data & size & rowstride;
+            ar & data & size & rowstride & has_alpha;
         }
     };
 
