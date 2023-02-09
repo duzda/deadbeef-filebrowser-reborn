@@ -6,7 +6,7 @@
 FlacReader::FlacReader() {
 }
 
-Glib::RefPtr<Gdk::Pixbuf> FlacReader::getImage(std::filesystem::path path, int size) {
+Glib::RefPtr<Gdk::Pixbuf> FlacReader::getImage(const std::filesystem::path& path, int size) {
     TagLib::FLAC::File file(path.c_str());
 
     Glib::RefPtr<Gdk::Pixbuf> image;

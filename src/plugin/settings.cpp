@@ -41,23 +41,23 @@ void Settings::update() {
     this->albumAlgorithm = deadbeef->conf_get_int(FBR_ALBUM_ALGORITHM, 0);
 }
 
-std::string Settings::getDefaultPath() {
+std::string Settings::getDefaultPath() const {
     return this->defaultPath;
 }
 
-int Settings::getIconSize() {
+int Settings::getIconSize() const {
     return this->iconSize;
 }
 
-int Settings::getDoubleclickReplace() {
+int Settings::getDoubleclickReplace() const {
     return this->doubleclickReplace;
 }
 
-int Settings::getAlbumAlgorithm() {
+int Settings::getAlbumAlgorithm() const {
     return this->albumAlgorithm;
 }
 
-std::vector<std::string> Settings::getValidExtensions() {
+std::vector<std::string> Settings::getValidExtensions() const {
     return this->validExtensions;
 }
 

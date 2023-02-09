@@ -32,7 +32,7 @@ public:
      * 
      * @return Pointer to the icon.
      */
-    static Glib::RefPtr<Gdk::Pixbuf> getIcon(std::filesystem::path path, uint size);
+    static Glib::RefPtr<Gdk::Pixbuf> getIcon(const std::filesystem::path& path, uint size);
 private:
     IconUtils();
     ~IconUtils();

@@ -16,7 +16,7 @@ public:
 
     void initialize(GUI::DispatcherBridge* bridge, GUI::FBTreeView* view, FBTreeFilter* filter, FBTreeModel* model);
     void setAddress(std::string addres);
-    std::string getAddress();
+    std::string getAddress() const;
 
     /**
      * Changes progress of the action of Addressbox.

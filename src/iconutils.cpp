@@ -16,7 +16,7 @@ Glib::RefPtr<Gdk::Pixbuf> IconUtils::getIconByName(const char* name, uint size) 
     }
 }
 
-Glib::RefPtr<Gdk::Pixbuf> IconUtils::getIcon(std::filesystem::path path, uint size) {
+Glib::RefPtr<Gdk::Pixbuf> IconUtils::getIcon(const std::filesystem::path& path, uint size) {
     Glib::RefPtr<Gdk::Pixbuf> icon;
 
     int algorithm = Settings::getInstance().getAlbumAlgorithm();

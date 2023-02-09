@@ -9,7 +9,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-Glib::RefPtr<Gdk::Pixbuf> ReaderFactory::getImage(std::filesystem::path path, int size, bool* shouldCache) {
+Glib::RefPtr<Gdk::Pixbuf> ReaderFactory::getImage(const std::filesystem::path& path, int size, bool* shouldCache) {
     *shouldCache = false;
     if (!path.has_extension()) {
         return IconUtils::getIconByName("audio-x-generic", size);

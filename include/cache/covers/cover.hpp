@@ -17,6 +17,6 @@ public:
      * 
      * @return Pointer to the cover art.
      */
-    virtual Glib::RefPtr<Gdk::Pixbuf> getIcon(std::filesystem::path path, uint size) = 0;
+    virtual Glib::RefPtr<Gdk::Pixbuf> getIcon(const std::filesystem::path& path, uint size) = 0;
 private:
 };

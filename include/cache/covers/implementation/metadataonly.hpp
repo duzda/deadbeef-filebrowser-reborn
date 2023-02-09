@@ -11,8 +11,8 @@ public:
     MetadataOnly();
     ~MetadataOnly();
 
-    Glib::RefPtr<Gdk::Pixbuf> getIcon(std::filesystem::path path, uint size);
+    Glib::RefPtr<Gdk::Pixbuf> getIcon(const std::filesystem::path& path, uint size);
 private:
-    bool isNotChild(std::filesystem::path parent, std::filesystem::path child);
-    Glib::RefPtr<Gdk::Pixbuf> hasChildrenIcon(std::filesystem::path cachePath, std::filesystem::path path, uint size);
+    bool isNotChild(const std::filesystem::path& parent, const std::filesystem::path& child) const;
+    Glib::RefPtr<Gdk::Pixbuf> hasChildrenIcon(const std::filesystem::path& cachePath, const std::filesystem::path& path, uint size);
 };

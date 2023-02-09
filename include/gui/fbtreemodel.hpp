@@ -30,14 +30,14 @@ public:
      * 
      * @return Double between 0 and 1, 1 when finished
      */
-    double getProgress();
+    double getProgress() const;
 
     /**
      * Sets new root directory, refreshTree should probably be called immediately after.
      * 
      * @param newDirectory New root directory
      */
-    void setTreeRoot(std::filesystem::path newDirectory);
+    void setTreeRoot(const std::filesystem::path& newDirectory);
 
     /**
      * Creates new thread that refreshes tree, removes all entries, and fills them again. 
@@ -85,7 +85,7 @@ private:
      * @param entry Path to the new child.
      * @param child Parent to of the current entry, can be null.
      */
-    void fillRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent = nullptr);
+    void fillRow(const std::filesystem::directory_entry& entry, const Gtk::TreeNodeChildren* parent = nullptr);
 
     /**
      * Fills row of treeview, but is allowed to be exited prematurely. (This should be used when adding children of a node)
@@ -93,7 +93,7 @@ private:
      * @param entry Path to the new child.
      * @param child Parent to the current entry.
      */
-    void fillChildrenRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent);
+    void fillChildrenRow(const std::filesystem::directory_entry& entry, const Gtk::TreeNodeChildren* parent);
 
     /**
      * Fills information row to treeview.

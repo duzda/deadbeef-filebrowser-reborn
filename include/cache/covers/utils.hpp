@@ -18,7 +18,7 @@ public:
      * 
      * @return Path to the cache file
      */
-    static std::filesystem::path createCachePath(std::filesystem::path path, uint size);
+    static std::filesystem::path createCachePath(const std::filesystem::path& path, uint size);
 private:
     Utils();
     ~Utils();

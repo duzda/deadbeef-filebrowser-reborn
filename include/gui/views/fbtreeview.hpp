@@ -24,21 +24,21 @@ public:
      * 
      * @return URI of selected row
      */
-    std::string getSelectedURI();
+    std::string getSelectedURI() const;
 
     /**
      * Returns all selected URIs from mTreeView.
      * 
      * @return Vector of selected rows
      */
-    std::vector<std::string> getSelectedURIs();
+    std::vector<std::string> getSelectedURIs() const;
 
     /**
      * Returns true if any row in mTreeView is selected.
      * 
      * @return True if any row is selected, false otherwise.
      */
-    bool hasSelected();
+    bool hasSelected() const;
 private:
     using Gtk::TreeView::set_model;
 

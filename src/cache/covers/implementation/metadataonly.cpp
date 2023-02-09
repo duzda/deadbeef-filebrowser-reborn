@@ -10,7 +10,7 @@ using namespace Cache::Covers;
 MetadataOnly::MetadataOnly() {   
 }
 
-Glib::RefPtr<Gdk::Pixbuf> MetadataOnly::getIcon(std::filesystem::path path, uint size) {
+Glib::RefPtr<Gdk::Pixbuf> MetadataOnly::getIcon(const std::filesystem::path& path, uint size) {
     Glib::RefPtr<Gdk::Pixbuf> icon;
     static std::string lastDirectory;
 
@@ -45,12 +45,12 @@ Glib::RefPtr<Gdk::Pixbuf> MetadataOnly::getIcon(std::filesystem::path path, uint
     return icon;
 }
 
-bool MetadataOnly::isNotChild(std::filesystem::path parent, std::filesystem::path child) {
+bool MetadataOnly::isNotChild(const std::filesystem::path& parent, const std::filesystem::path& child) const {
     return parent == "" || child.string().find(parent) == std::string::npos || 
         child.string().size() <= parent.string().size() || child.string()[parent.string().size()] != '/';
 }
 
-Glib::RefPtr<Gdk::Pixbuf> MetadataOnly::hasChildrenIcon(std::filesystem::path cachePath, std::filesystem::path path, uint size) {
+Glib::RefPtr<Gdk::Pixbuf> MetadataOnly::hasChildrenIcon(const std::filesystem::path& cachePath, const std::filesystem::path& path, uint size) {
     for (const auto &entry : std::filesystem::recursive_directory_iterator(path)) {
         if (!entry.is_directory()) {
             bool useCache = false;

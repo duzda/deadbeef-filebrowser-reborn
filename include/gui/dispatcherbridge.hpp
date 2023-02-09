@@ -14,7 +14,7 @@ public:
 
     void initialize(Addressbox* addressbox, Searchbar* searchbar, FBTreeView* view, FBTreeModel* model);
 
-    bool inProgress();
+    bool inProgress() const;
 
     void onStart();
 

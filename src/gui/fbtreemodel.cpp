@@ -28,11 +28,11 @@ void FBTreeModel::initialize(DispatcherBridge* bridge, FBTreeView* view) {
     this->mView = view;
 }
 
-double FBTreeModel::getProgress() {
+double FBTreeModel::getProgress() const {
     return (this->mRefreshLock ? (double)this->mThreadProgress : 1);
 }
 
-void FBTreeModel::setTreeRoot(std::filesystem::path newDirectory) {
+void FBTreeModel::setTreeRoot(const std::filesystem::path& newDirectory) {
     if (this->mRefreshLock) {
         return;
     }
@@ -97,7 +97,7 @@ void FBTreeModel::stopThread() {
     }
 }
 
-void FBTreeModel::fillRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent) {
+void FBTreeModel::fillRow(const std::filesystem::directory_entry& entry, const Gtk::TreeNodeChildren* parent) {
     Glib::RefPtr<Gdk::Pixbuf> icon = IconUtils::getIcon(entry, Settings::getInstance().getIconSize());
     Gtk::TreeModel::iterator iter;
     if (parent) {
@@ -117,7 +117,7 @@ void FBTreeModel::fillRow(std::filesystem::directory_entry entry, const Gtk::Tre
     }
 }
 
-void FBTreeModel::fillChildrenRow(std::filesystem::directory_entry entry, const Gtk::TreeNodeChildren* parent) {
+void FBTreeModel::fillChildrenRow(const std::filesystem::directory_entry& entry, const Gtk::TreeNodeChildren* parent) {
     auto filelist = Filebrowser::getFileList(entry.path(), true, false);
     std::size_t count = filelist.size();
     if (count > 0) {

@@ -19,7 +19,7 @@ void DispatcherBridge::initialize(Addressbox* addressbox, Searchbar* searchbar, 
     this->mModel = model;
 }
 
-bool DispatcherBridge::inProgress() {
+bool DispatcherBridge::inProgress() const {
     return this->mInProgress;
 }
 

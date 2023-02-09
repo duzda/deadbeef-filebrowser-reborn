@@ -7,6 +7,6 @@ public:
     WavReader();
     ~WavReader();
 
-    Glib::RefPtr<Gdk::Pixbuf> getImage(std::filesystem::path path, int size);
+    Glib::RefPtr<Gdk::Pixbuf> getImage(const std::filesystem::path& path, int size);
 private:
 };

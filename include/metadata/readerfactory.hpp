@@ -19,7 +19,7 @@ public:
      * 
      * @return Pointer to the image.
      */
-    static Glib::RefPtr<Gdk::Pixbuf> getImage(std::filesystem::path path, int size, bool* shouldCache);
+    static Glib::RefPtr<Gdk::Pixbuf> getImage(const std::filesystem::path& path, int size, bool* shouldCache);
 private:
     ReaderFactory();
     ~ReaderFactory();

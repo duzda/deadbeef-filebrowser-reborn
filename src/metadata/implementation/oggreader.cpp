@@ -6,7 +6,7 @@
 OggReader::OggReader() {
 }
 
-Glib::RefPtr<Gdk::Pixbuf> OggReader::getImage(std::filesystem::path path, int size) {
+Glib::RefPtr<Gdk::Pixbuf> OggReader::getImage(const std::filesystem::path& path, int size) {
     TagLib::Ogg::Vorbis::File file(path.c_str());
 
     Glib::RefPtr<Gdk::Pixbuf> image;

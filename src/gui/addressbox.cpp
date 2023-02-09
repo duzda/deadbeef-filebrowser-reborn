@@ -39,7 +39,7 @@ void Addressbox::setAddress(std::string address) {
     this->on_go_button_click();
 }
 
-std::string Addressbox::getAddress() {
+std::string Addressbox::getAddress() const {
     return this->mAddressBar.get_text();
 }
 

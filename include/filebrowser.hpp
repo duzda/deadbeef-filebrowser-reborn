@@ -15,7 +15,7 @@ public:
      * 
      * @return Vector of directory entries for path
      */
-    static std::vector<std::filesystem::directory_entry> getFileList(std::filesystem::path path, bool sort, bool showHiddenFiles);
+    static std::vector<std::filesystem::directory_entry> getFileList(const std::filesystem::path& path, bool sort, bool showHiddenFiles);
 
     /**
      * @param directory
@@ -24,7 +24,7 @@ public:
      * 
      * @return True if directory contains file, false otherwise.
      */
-    static bool hasFile(std::filesystem::path directory, std::vector<std::string> acceptedFiles, std::string* outputFile);
+    static bool hasFile(const std::filesystem::path& directory, std::vector<std::string> acceptedFiles, std::string* outputFile);
 private:
     Filebrowser();
     virtual ~Filebrowser();

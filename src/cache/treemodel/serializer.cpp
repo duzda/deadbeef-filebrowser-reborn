@@ -41,7 +41,7 @@ void Serializer::load(GUI::FBTreeModel* model) {
     }
 }
 
-bool Serializer::shouldRecover(std::filesystem::path path) {
+bool Serializer::shouldRecover(const std::filesystem::path& path) {
     if (!Serializer::exists()) {
         return false;
     }

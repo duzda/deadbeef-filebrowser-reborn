@@ -20,12 +20,12 @@ public:
      */
     void onUpdate();
 
-    std::string getDefaultPath();
-    int getIconSize();
-    int getDoubleclickReplace();
-    int getAlbumAlgorithm();
+    std::string getDefaultPath() const;
+    int getIconSize() const;
+    int getDoubleclickReplace() const;
+    int getAlbumAlgorithm() const;
 
-    std::vector<std::string> getValidExtensions();
+    std::vector<std::string> getValidExtensions() const;
 private:
     Settings();
 

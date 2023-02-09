@@ -10,7 +10,7 @@ using namespace Cache::Covers;
 CoverFirst::CoverFirst() {
 }
 
-Glib::RefPtr<Gdk::Pixbuf> CoverFirst::getIcon(std::filesystem::path path, uint size) {
+Glib::RefPtr<Gdk::Pixbuf> CoverFirst::getIcon(const std::filesystem::path& path, uint size) {
     Glib::RefPtr<Gdk::Pixbuf> icon;
     static Glib::RefPtr<Gdk::Pixbuf> lastIcon;
     static std::string lastDirectory;
@@ -48,7 +48,7 @@ Glib::RefPtr<Gdk::Pixbuf> CoverFirst::getIcon(std::filesystem::path path, uint s
     return icon;
 }
 
-bool CoverFirst::isNotChild(std::filesystem::path parent, std::filesystem::path child) {
+bool CoverFirst::isNotChild(const std::filesystem::path& parent, const std::filesystem::path& child) const {
     return parent == "" || child.string().find(parent) == std::string::npos || 
         child.string().size() <= parent.string().size() || child.string()[parent.string().size()] != '/';
 }

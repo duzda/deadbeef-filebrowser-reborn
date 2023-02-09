@@ -7,6 +7,6 @@ public:
     FlacReader();
     ~FlacReader();
 
-    Glib::RefPtr<Gdk::Pixbuf> getImage(std::filesystem::path path, int size) override;
+    Glib::RefPtr<Gdk::Pixbuf> getImage(const std::filesystem::path& path, int size) override;
 private:
 };

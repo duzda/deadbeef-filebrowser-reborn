@@ -35,11 +35,11 @@ void FBTreeView::setModel() {
     this->set_model(this->mFilter);
 }
 
-std::string FBTreeView::getSelectedURI() {
+std::string FBTreeView::getSelectedURI() const {
     return mFilter->get_iter(this->get_selection()->get_selected_rows()[0])->get_value(mModel->ModelColumns.ColumnURI);
 }
 
-std::vector<std::string> FBTreeView::getSelectedURIs() {
+std::vector<std::string> FBTreeView::getSelectedURIs() const {
     std::vector<std::string> uris;
     auto rows = this->get_selection()->get_selected_rows();
     for (auto &row : rows) {
@@ -49,7 +49,7 @@ std::vector<std::string> FBTreeView::getSelectedURIs() {
     return uris;
 }
 
-bool FBTreeView::hasSelected() {
+bool FBTreeView::hasSelected() const {
     return this->get_selection()->get_selected_rows().size() != 0;
 }
 

@@ -6,7 +6,7 @@
 WavReader::WavReader() {
 }
 
-Glib::RefPtr<Gdk::Pixbuf> WavReader::getImage(std::filesystem::path path, int size) {
+Glib::RefPtr<Gdk::Pixbuf> WavReader::getImage(const std::filesystem::path& path, int size) {
     TagLib::RIFF::WAV::File file(path.c_str());
 
     Glib::RefPtr<Gdk::Pixbuf> image;

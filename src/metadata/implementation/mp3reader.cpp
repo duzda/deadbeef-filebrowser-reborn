@@ -6,7 +6,7 @@
 MP3Reader::MP3Reader() {
 }
 
-Glib::RefPtr<Gdk::Pixbuf> MP3Reader::getImage(std::filesystem::path path, int size) {
+Glib::RefPtr<Gdk::Pixbuf> MP3Reader::getImage(const std::filesystem::path& path, int size) {
     TagLib::MPEG::File file(path.c_str());
 
     Glib::RefPtr<Gdk::Pixbuf> image;

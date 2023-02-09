@@ -7,6 +7,6 @@ public:
     MP3Reader();
     ~MP3Reader();
 
-    Glib::RefPtr<Gdk::Pixbuf> getImage(std::filesystem::path path, int size);
+    Glib::RefPtr<Gdk::Pixbuf> getImage(const std::filesystem::path& path, int size);
 private:
 };

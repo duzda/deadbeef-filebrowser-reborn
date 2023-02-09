@@ -18,7 +18,7 @@
 
 #include "settings.hpp"
 
-std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(std::filesystem::path path, bool sort, bool showHiddenFiles) {
+std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(const std::filesystem::path& path, bool sort, bool showHiddenFiles) {
     std::vector<std::filesystem::directory_entry> files = {};
 
     for(const auto &entry : std::filesystem::directory_iterator(path)) {
@@ -54,7 +54,7 @@ std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(std::file
 
     if (sort) {
         std::sort(files.begin(), files.end(), 
-            [](const std::filesystem::directory_entry &s1, const std::filesystem::directory_entry &s2) -> bool {
+            [](const std::filesystem::directory_entry& s1, const std::filesystem::directory_entry& s2) -> bool {
                 return strcasecmp(s1.path().c_str(), s2.path().c_str()) < 0 ? true : false;
             });
     }
@@ -62,7 +62,7 @@ std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(std::file
     return files;
 }
 
-bool Filebrowser::hasFile(std::filesystem::path directory, std::vector<std::string> acceptedFiles, std::string* outputFile) {
+bool Filebrowser::hasFile(const std::filesystem::path& directory, std::vector<std::string> acceptedFiles, std::string* outputFile) {
     auto path = directory.string();
     for (auto &file : acceptedFiles) {
         if (std::filesystem::exists(path + '/' + file)) {
