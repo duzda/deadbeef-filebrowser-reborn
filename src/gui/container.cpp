@@ -6,6 +6,7 @@
 #include "plugin.hpp"
 #include "filebrowser.hpp"
 #include "utils.hpp"
+#include "serializer.hpp"
 
 using namespace GUI;
 
@@ -30,7 +31,12 @@ Container::Container() :
     this->pack_start(mAddressbox, false, true);
     this->pack_start(mScrolledWindow, true, true);
 
-    mAddressbox.setAddress(Settings::getInstance().getDefaultPath());
+    if (Cache::TreeModel::Serializer::shouldRecover(Settings::getInstance().getDefaultPath())) {
+        this->mModel->setTreeRoot(Settings::getInstance().getDefaultPath());
+        this->mModel->initialLoad();
+    } else {
+        this->mAddressbox.setAddress(Settings::getInstance().getDefaultPath());
+    }
 }
 
 Container::~Container() {

@@ -2,6 +2,9 @@ dependencies = [
     dependency('gtkmm-3.0'),
     dependency('taglib'),
     dependency('threads'),
+    dependency('boost', modules: [
+        'serialization',
+    ]),
 ]
 
 # Apparently deadbeef can't be found with pkg-conf
@@ -18,12 +21,14 @@ source_files = files(
     'cache/covers/implementation/coverfirst.cpp',
     'cache/covers/implementation/metadatafirst.cpp',
     'cache/covers/implementation/metadataonly.cpp',
+    'cache/treemodel/serializer.cpp',
     'gui/dispatcherbridge.cpp',
     'gui/modelcolumns.cpp',
     'gui/container.cpp',
     'gui/searchbar.cpp',
     'gui/addressbox.cpp',
     'gui/fbtreemodel.cpp',
+    'gui/modelserializer.cpp',
     'gui/fbtreefilter.cpp',
     'gui/fbtreepopup.cpp',
     'gui/views/fbtreeview.cpp',
@@ -43,6 +48,7 @@ includes = [
     include_directories('../include/cache'),
     include_directories('../include/cache/covers'),
     include_directories('../include/cache/covers/implementation'),
+    include_directories('../include/cache/treemodel'),
     include_directories('../include/gui'), 
     include_directories('../include/gui/views'), 
     include_directories('../include/plugin'), 

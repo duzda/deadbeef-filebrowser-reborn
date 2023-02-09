@@ -2,13 +2,12 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "dispatcherbridge.hpp"
 #include "fbtreeview.hpp"
 #include "filebrowser.hpp"
 #include "iconutils.hpp"
-#include "plugin.hpp"
 #include "addressbox.hpp"
 #include "settings.hpp"
+#include "serializer.hpp"
 
 using namespace GUI;
 
@@ -38,11 +37,10 @@ void FBTreeModel::setTreeRoot(std::filesystem::path newDirectory) {
         return;
     }
     this->mTreeDirectory = newDirectory;
-    this->refreshTree();
 }
 
-void FBTreeModel::refreshTree() {
-    if (this->mRefreshLock) {
+void FBTreeModel::refreshTree(bool force) {
+    if (!force && this->mRefreshLock) {
         return;
     }
     this->mRefreshLock = true;
@@ -51,18 +49,25 @@ void FBTreeModel::refreshTree() {
     this->mRefreshThread = new std::thread(&FBTreeModel::refreshThread, this);
 }
 
+void FBTreeModel::initialLoad() {
+    this->mRefreshLock = true;
+    this->mView->unset_model();
+    this->mBridge->onStart();
+    this->mRefreshThread = new std::thread(&Cache::TreeModel::Serializer::load, this);
+}
+
 void FBTreeModel::refreshThread() {
     this->clear();
     pluginLog(LogLevel::Info, "Loading tree structure");
     auto filelist = Filebrowser::getFileList(mTreeDirectory, true, false);
     double progressTotal = filelist.size();
-    double progressIteration = 0;
-    this->mThreadProgress = 0;
-    if (progressTotal > 0) {
+    double progressIteration = 0.0;
+    this->mThreadProgress = 0.0;
+    if (progressTotal > 0.0) {
         for (auto &entry : filelist) {
             if (!this->mRefreshThreadRunning.load()) {
                 pluginLog(LogLevel::Info, "Load canceled by user");
-                this->mThreadProgress = 1;
+                this->mThreadProgress = 1.0;
                 this->mBridge->notify();
                 this->mRefreshLock = false;
                 return;
@@ -78,7 +83,8 @@ void FBTreeModel::refreshThread() {
     pluginLog(LogLevel::Info, "Structure loaded");
     this->mRefreshLock = false;
     pluginLog(LogLevel::Info, "Notifying dispatcher - task done");
-    this->mThreadProgress = 1;
+    this->mThreadProgress = 1.0;
+    new std::thread(&Cache::TreeModel::Serializer::save, this);
     this->mBridge->notify();
 }
 

@@ -31,6 +31,7 @@ void Addressbox::initialize(DispatcherBridge* bridge, FBTreeView* view, FBTreeFi
     this->mView = view;
     this->mFilter = filter;
     this->mModel = model;
+    this->mAddressBar.set_text(Settings::getInstance().getDefaultPath());
 }
 
 void Addressbox::setAddress(std::string address) {
@@ -65,6 +66,7 @@ void Addressbox::on_go_button_click() {
     this->mAddressBar.set_text(address);
     if (std::filesystem::exists((std::string)address) && std::filesystem::is_directory((std::string)address)) {
         this->mModel->setTreeRoot((std::string)address);
+        this->mModel->refreshTree();
     }
 }
 

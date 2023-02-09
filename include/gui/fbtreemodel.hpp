@@ -5,9 +5,15 @@
 #include <thread>
 #include <atomic>
 #include <memory>
+#include <boost/serialization/split_member.hpp>
+#include <boost/serialization/vector.hpp>
 
 #include "gui.hpp"
 #include "modelcolumns.hpp"
+#include "fbtreeview.hpp"
+#include "dispatcherbridge.hpp"
+
+#include "plugin.hpp"
 
 /**
  * Extends Gtk::TreeStore, container for all the data, see ModelColumns for used columns.
@@ -22,12 +28,12 @@ public:
     /**
      * Returns approximate progress of reading directory tree.
      * 
-     * @return Float between 0 and 1, 1 when finished
+     * @return Double between 0 and 1, 1 when finished
      */
     double getProgress();
 
     /**
-     * Sets new root directory and refreshes tree.
+     * Sets new root directory, refreshTree should probably be called immediately after.
      * 
      * @param newDirectory New root directory
      */
@@ -36,8 +42,15 @@ public:
     /**
      * Creates new thread that refreshes tree, removes all entries, and fills them again. 
      * If you want to filter things out, see filebrowserfilter instead.
+     * 
+     * @param force Refresh can be forced, this is good idea if refresh is called due to an error, such as recovering from error while loading cached model
      */
-    void refreshTree();
+    void refreshTree(bool force = false);
+
+    /**
+     * Restores Tree from cache
+    */
+    void initialLoad();
 
     void refreshThread();
 
@@ -86,4 +99,47 @@ private:
      * Fills information row to treeview.
      */
     void fillEmptyRow();
+
+private:
+    friend boost::serialization::access;
+
+    struct Image {
+        std::vector<guint8> data;
+        // Colorspace (Add in the future)
+        bool has_alpha; // System icons use alpha
+        // Bits per sample (Add in the future)
+        int size;
+        int rowstride;
+
+        template<class Archive>
+        void serialize(Archive &ar, const unsigned int version) {
+            ar & data & size & rowstride & has_alpha;
+        }
+    };
+
+    struct Row {
+        int depth;
+        std::string name;
+        std::string uri;
+        std::string tooltip;
+        Image image;
+
+        template<class Archive>
+        void serialize(Archive &ar, const unsigned int version) {
+            ar & depth & name & uri & tooltip & image;
+        }
+    };
+
+    // Implementation in modelserializer.cpp
+
+    template<class Archive>
+    void save(Archive &ar, const unsigned int version) const;
+
+    template<class Archive>
+    void saveRecursively(Archive &ar, std::vector<Row>* rows, Gtk::TreeIter iter, int depth, const unsigned int version) const;
+
+    template<class Archive>
+    void load(Archive &ar, const unsigned int version);
+
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };

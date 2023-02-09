@@ -9,7 +9,7 @@
 using namespace GUI;
 
 DispatcherBridge::DispatcherBridge() {
-    mDispatcher.connect(sigc::mem_fun(*this, &DispatcherBridge::onNotify));
+    mDispatcher.connect(sigc::mem_fun(*this, &DispatcherBridge::updateProgressState));
 }
 
 void DispatcherBridge::initialize(Addressbox* addressbox, Searchbar* searchbar, FBTreeView* view, FBTreeModel* model) {
@@ -34,21 +34,19 @@ void DispatcherBridge::notify() {
     mDispatcher.emit();
 }
 
-void DispatcherBridge::onNotify() {
-    this->updateProgressState();
-}
-
 void DispatcherBridge::updateProgressState() {
-    double progress = mModel->getProgress();
-    if (progress == 1) {
-        pluginLog(LogLevel::Info, "Thread reported progress done");
-        this->mInProgress = false;
-        this->mAddressbox->setState(true);
-        this->mSearchbar->set_sensitive(true);
-        this->mAddressbox->setProgress(0.0);
-        this->mView->setModel();
-    } else {
-        this->mAddressbox->setProgress(progress);
+    if (this->mInProgress) {
+        double progress = mModel->getProgress();
+        if (progress == 1.0) {
+            pluginLog(LogLevel::Info, "Thread reported progress done");
+            this->mInProgress = false;
+            this->mAddressbox->setState(true);
+            this->mSearchbar->set_sensitive(true);
+            this->mAddressbox->setProgress(0.0);
+            this->mView->setModel();
+        } else {
+            this->mAddressbox->setProgress(progress);
+        }
     }
 }
 
