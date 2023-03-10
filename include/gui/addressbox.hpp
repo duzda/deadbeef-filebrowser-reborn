@@ -38,6 +38,7 @@ private:
     GUI::FBTreeView* mView;
     GUI::FBTreeFilter* mFilter;
     GUI::DispatcherBridge* mBridge;
+    std::string mAddress;
 
     /**
      * Gets called when pressing the search button.

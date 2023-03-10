@@ -40,7 +40,7 @@ void Addressbox::setAddress(std::string address) {
 }
 
 std::string Addressbox::getAddress() const {
-    return this->mAddressBar.get_text();
+    return this->mAddress;
 }
 
 void Addressbox::setProgress(double progress) {
@@ -65,6 +65,7 @@ void Addressbox::on_go_button_click() {
     deadbeef->conf_set_str(FBR_DEFAULT_PATH, address.c_str());
     this->mAddressBar.set_text(address);
     if (std::filesystem::exists((std::string)address) && std::filesystem::is_directory((std::string)address)) {
+        this->mAddress = address;
         this->mModel->setTreeRoot((std::string)address);
         this->mModel->refreshTree();
     }
