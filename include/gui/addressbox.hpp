@@ -15,7 +15,7 @@ public:
     ~Addressbox();
 
     void initialize(GUI::DispatcherBridge* bridge, GUI::FBTreeView* view, FBTreeFilter* filter, FBTreeModel* model);
-    void setAddress(std::string addres);
+    void setAddress(std::string address);
     std::string getAddress() const;
 
     /**
