@@ -1,5 +1,7 @@
 #include "container.hpp"
 
+#include <filesystem>
+
 #include "fbtreemodel.hpp"
 #include "fbtreefilter.hpp"
 #include "settings.hpp"
@@ -31,11 +33,16 @@ Container::Container() :
     this->pack_start(mAddressbox, false, true);
     this->pack_start(mScrolledWindow, true, true);
 
-    if (Cache::TreeModel::Serializer::shouldRecover(Settings::getInstance().getDefaultPath())) {
-        this->mModel->setTreeRoot(Settings::getInstance().getDefaultPath());
+    std::filesystem::path defaultPath = Settings::getInstance().getDefaultPath();
+    if (!std::filesystem::exists(defaultPath) || !std::filesystem::is_directory(defaultPath)) {
+        return;
+    }
+
+    if (Cache::TreeModel::Serializer::shouldRecover(defaultPath)) {
+        this->mModel->setTreeRoot(defaultPath);
         this->mModel->initialLoad();
     } else {
-        this->mAddressbox.setAddress(Settings::getInstance().getDefaultPath());
+        this->mAddressbox.setAddress(defaultPath);
     }
 }
 
