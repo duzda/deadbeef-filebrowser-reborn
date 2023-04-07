@@ -65,7 +65,7 @@ void FBTreeModel::refreshThread() {
     this->mThreadProgress = 0.0;
     if (progressTotal > 0.0) {
         for (auto &entry : filelist) {
-            if (!this->mRefreshThreadRunning.load()) {
+            if (!this->mRefreshThreadRunning) {
                 pluginLog(LogLevel::Info, "Load canceled by user");
                 this->mThreadProgress = 1.0;
                 this->mBridge->notify();
@@ -122,7 +122,7 @@ void FBTreeModel::fillChildrenRow(const std::filesystem::directory_entry& entry,
     std::size_t count = filelist.size();
     if (count > 0) {
         for (auto &entry : filelist) {
-            if (!mRefreshThreadRunning.load()) {
+            if (!mRefreshThreadRunning) {
                 pluginLog(LogLevel::Info, "Child load canceled by user");
                 return;
             }

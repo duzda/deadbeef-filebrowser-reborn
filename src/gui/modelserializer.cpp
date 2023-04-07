@@ -51,7 +51,7 @@ void FBTreeModel::load(Archive &ar, const unsigned int version) {
     this->mThreadProgress = 0.0;
 
     for(const auto &row : rows) {
-        if (!this->mRefreshThreadRunning.load()) {
+        if (!this->mRefreshThreadRunning) {
             pluginLog(LogLevel::Info, "Load canceled by user");
             this->mThreadProgress = 1.0;
             this->mBridge->notify();
