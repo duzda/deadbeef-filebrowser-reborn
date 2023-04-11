@@ -34,7 +34,7 @@ Glib::RefPtr<Gdk::Pixbuf> ReaderFactory::getImage(const std::filesystem::path& p
     return IconUtils::getIconByName("audio-x-generic", size);
 }
 
-Reader* ReaderFactory::createReader(std::string extension) {
+Reader* ReaderFactory::createReader(const std::string& extension) {
     Reader* reader = nullptr;
     if (extension == ".flac") {
         reader = new FlacReader(); 

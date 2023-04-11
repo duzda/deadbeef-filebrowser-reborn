@@ -31,5 +31,5 @@ private:
      * 
      * @return Pointer to Reader object or nullptr.
      */
-    static Reader* createReader(std::string extension);
+    static Reader* createReader(const std::string& extension);
 };

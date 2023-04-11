@@ -42,7 +42,7 @@ DB_plugin_t* ddb_misc_filebrowser_reborn_load(DB_functions_t* api) {
     return DB_PLUGIN(&plugin.plugin);
 }
 
-void pluginLog(LogLevel level, std::string message) {
+void pluginLog(LogLevel level, const std::string& message) {
     std::string levelString = "UNKNOWN";
 
     int deadbeefLevel = 1;

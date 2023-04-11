@@ -82,7 +82,7 @@ void FBTreePopup::threadedAddToPlaylist(void* ctx) {
     FBTreePopup::addToPlaylist(holder->uris, holder->address, holder->replace);
 }
 
-void FBTreePopup::addToPlaylist(std::vector<std::string> uris, std::string address, bool replace) {
+void FBTreePopup::addToPlaylist(std::vector<std::string> uris, const std::string& address, bool replace) {
     ddb_playlist_t* plt = deadbeef->plt_get_curr();
 
     int itemCount = deadbeef->plt_get_item_count(plt, PL_MAIN);

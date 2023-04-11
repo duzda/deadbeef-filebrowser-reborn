@@ -52,7 +52,7 @@ private:
      * @param address Every URI has to be constructed first, pass mAddressbox->getAddress().
      * @param replace Whether current playlist should be replaced.
      */
-    static void addToPlaylist(std::vector<std::string> uris, std::string address, bool replace);
+    static void addToPlaylist(std::vector<std::string> uris, const std::string& address, bool replace);
 
     /**
      * Calls addToPlaylist, make sure to pass structAddToPlaylist as argument.

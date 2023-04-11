@@ -9,6 +9,6 @@ enum LogLevel {
     Error
 };
 
-void pluginLog(LogLevel level, std::string message);
+void pluginLog(LogLevel level, const std::string& message);
 
 extern DB_functions_t* deadbeef;
