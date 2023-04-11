@@ -5,6 +5,7 @@
 #include "serializer.hpp"
 
 #include <gtkmm.h>
+#include <algorithm>
 
 Settings::Settings() {
     this->update();
@@ -57,7 +58,7 @@ int Settings::getAlbumAlgorithm() const {
     return this->albumAlgorithm;
 }
 
-std::vector<std::string> Settings::getValidExtensions() const {
+const std::vector<std::string>& Settings::getValidExtensions() const {
     return this->validExtensions;
 }
 
@@ -75,5 +76,6 @@ std::vector<std::string> Settings::createValidExtensions() {
             extensions.push_back(buf->str);
         }
     }
+    std::sort(extensions.begin(), extensions.end());
     return extensions;
 }

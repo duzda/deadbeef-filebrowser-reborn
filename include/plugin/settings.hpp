@@ -25,7 +25,7 @@ public:
     int getDoubleclickReplace() const;
     int getAlbumAlgorithm() const;
 
-    std::vector<std::string> getValidExtensions() const;
+    const std::vector<std::string>& getValidExtensions() const;
 private:
     Settings();
 

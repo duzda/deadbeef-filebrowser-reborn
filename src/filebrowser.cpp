@@ -40,14 +40,8 @@ std::vector<std::filesystem::directory_entry> Filebrowser::getFileList(const std
         }
 
         // Check file extension
-        bool validFile = false;
-        for (auto &extension : Settings::getInstance().getValidExtensions()) {
-            if (entry.path().extension() == extension) {
-                validFile = true;
-                break;
-            }
-        }
-        if (validFile) {
+        auto extensions = Settings::getInstance().getValidExtensions();
+        if (std::binary_search(extensions.begin(), extensions.end(), entry.path().extension())) {
             files.push_back(entry);
         }
     }
