@@ -17,7 +17,7 @@ Glib::RefPtr<Gdk::Pixbuf> CoverFirst::getIcon(const std::filesystem::path& path,
 
     auto currentPath = Utils::createCachePath(path, size);
     if (std::filesystem::exists(currentPath)) {
-        icon = Gdk::Pixbuf::create_from_file(currentPath);
+        icon = Cache::Covers::Utils::getIconFromCache(currentPath, "folder", size);
 
         lastIcon = icon;
         lastDirectory = path;
@@ -26,8 +26,7 @@ Glib::RefPtr<Gdk::Pixbuf> CoverFirst::getIcon(const std::filesystem::path& path,
             if (std::filesystem::is_directory(path)) {
                 std::string outputName;
                 if (Filebrowser::hasFile(path, SUPPORTED_COVERS, &outputName)) {
-                    icon = Gdk::Pixbuf::create_from_file(outputName, -1, size, true);
-                    icon->save(currentPath, "bmp");
+                    icon = Cache::Covers::Utils::getIcon(outputName, currentPath, "folder", size);
 
                     lastDirectory = path;
                     lastIcon = icon;

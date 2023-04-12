@@ -16,15 +16,15 @@ Glib::RefPtr<Gdk::Pixbuf> MetadataFirst::getIcon(const std::filesystem::path& pa
 
     auto currentPath = Utils::createCachePath(path, size);
     if (std::filesystem::exists(currentPath)) {
-        icon = Gdk::Pixbuf::create_from_file(currentPath);
+        icon = Cache::Covers::Utils::getIconFromCache(currentPath, "folder", size);
+
         lastDirectory = path;
     } else {
         if (this->isNotChild(lastDirectory, path)) {
             if (std::filesystem::is_directory(path)) {
                 std::string outputName;
                 if (Filebrowser::hasFile(path, SUPPORTED_COVERS, &outputName)) {
-                    icon = Gdk::Pixbuf::create_from_file(outputName, -1, size, true);
-                    icon->save(currentPath, "bmp");
+                    icon = Cache::Covers::Utils::getIcon(outputName, currentPath, "folder", size);
                 } else {
                     icon = this->hasChildrenIcon(currentPath, path, size);
                 }
@@ -40,8 +40,7 @@ Glib::RefPtr<Gdk::Pixbuf> MetadataFirst::getIcon(const std::filesystem::path& pa
             if (std::filesystem::is_directory(path)) {
                 std::string outputName;
                 if (Filebrowser::hasFile(path, SUPPORTED_COVERS, &outputName)) {
-                    icon = Gdk::Pixbuf::create_from_file(outputName, -1, size, true);
-                    icon->save(currentPath, "bmp");
+                    icon = Cache::Covers::Utils::getIcon(outputName, currentPath, "folder", size);
                 } else {
                     icon = this->hasChildrenIcon(currentPath, path, size);
                 }
@@ -67,8 +66,7 @@ Glib::RefPtr<Gdk::Pixbuf> MetadataFirst::hasChildrenIcon(const std::filesystem::
         if (entry.is_directory()) {
             std::string outputName;
             if (Filebrowser::hasFile(entry, SUPPORTED_COVERS, &outputName)) {
-                auto icon = Gdk::Pixbuf::create_from_file(outputName, -1, size, true);
-                icon->save(cachePath, "bmp");
+                auto icon = Cache::Covers::Utils::getIcon(outputName, cachePath, "folder", size);
                 return icon;
             }
         } else {

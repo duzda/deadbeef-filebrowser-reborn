@@ -16,7 +16,8 @@ Glib::RefPtr<Gdk::Pixbuf> MetadataOnly::getIcon(const std::filesystem::path& pat
 
     auto currentPath = Utils::createCachePath(path, size);
     if (std::filesystem::exists(currentPath)) {
-        icon = Gdk::Pixbuf::create_from_file(currentPath);
+        icon = Cache::Covers::Utils::getIconFromCache(currentPath, "audio-x-generic", size);
+
         lastDirectory = path;
     } else {
         if (this->isNotChild(lastDirectory, path)) {
