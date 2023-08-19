@@ -7,7 +7,7 @@ using namespace GUI;
 
 Searchbar::Searchbar() {
     auto primaryIcon = this->property_primary_icon_pixbuf();
-    primaryIcon = IconUtils::getIconByName("system-search", 16);
+    primaryIcon = IconUtils::getIconByName("system-search-symbolic", 16);
     this->set_sensitive(false);
 }
 
