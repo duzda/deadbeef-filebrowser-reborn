@@ -20,7 +20,7 @@ Beware of loops in your filesystem, plugin doesn't like them! :)
 
 Feel free to [download the plugin](https://github.com/duzda/deadbeef-filebrowser-reborn/releases) and put inside of your 
 ``` ~/.local/lib/deadbeef/ ```
-then you should be able to create a new widget called 'File Browser' via design menu. If you would instead prefer to compile the plugin by youself, make sure to install all required libraries.
+then you should be able to create a new widget called 'File Browser' via design menu. If you would instead prefer to compile the plugin by yourself, make sure to install all required libraries.
 
 On Arch Linux:
 
